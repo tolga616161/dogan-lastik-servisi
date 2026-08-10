@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Doğan Lastik Servisi — 7/24 expres anında lastik değişimi, yol yardım ve mobil lastik hizmeti." />
-  <title>Doğan Lastik Servisi | 7/24 Expres Anında Hizmet</title>
+  <meta name="description" content="Doğan Lastik Servisi — İskele, Kıbrıs. 7/24 expres lastik ve yol yardım. Bölgenizi seçin, kaç dakikada yanınızda olduğumuzu görün." />
+  <title>Doğan Lastik Servisi | İskele · 7/24 Expres</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -12,133 +12,119 @@
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
+  <canvas id="tire-canvas" aria-hidden="true"></canvas>
+  <div class="scene-veil" aria-hidden="true"></div>
 
   <header class="site-header">
-    <a class="logo" href="#ust">Doğan Lastik</a>
+    <a class="brand-lockup" href="#ust" aria-label="Doğan Lastik Servisi">
+      <img src="assets/logo-dogan.png" alt="" class="brand-mark" width="48" height="48" />
+      <span class="brand-text">
+        <strong>Doğan Lastik Servisi</strong>
+        <small>İskele · Kıbrıs · 7/24</small>
+      </span>
+    </a>
     <nav class="nav" aria-label="Ana menü">
+      <a href="#ulasim">Ulaşım</a>
       <a href="#hizmetler">Hizmetler</a>
-      <a href="#neden">Neden Biz</a>
-      <a href="#iletisim">İletişim</a>
+      <a href="#harita">Harita</a>
     </nav>
-    <a class="header-cta" href="tel:+905551234567">Hemen Ara</a>
+    <a class="header-cta" href="tel:+905551234567">Ara</a>
   </header>
 
   <main>
     <section class="hero" id="ust">
-      <div class="hero-media" aria-hidden="true">
-        <img src="assets/hero-lastik.jpg" alt="" class="hero-img" />
-        <div class="hero-shade"></div>
-        <div class="hero-glow"></div>
-      </div>
-
-      <div class="hero-content">
-        <p class="brand reveal" style="--d:0s">Doğan Lastik Servisi</p>
-        <h1 class="reveal" style="--d:.08s">7/24 Expres<br />Anında Hizmet</h1>
-        <p class="lede reveal" style="--d:.16s">
-          Lastik patladı, balans bozuldu, yolda kaldınız — dakikalar içinde yanınızdayız.
+      <div class="hero-copy">
+        <p class="eyebrow reveal" style="--d:0s">İskele merkez · Mobil expres ekip</p>
+        <h1 class="reveal" style="--d:.06s">7/24 Expres<br />Anında Hizmet</h1>
+        <p class="lede reveal" style="--d:.12s">
+          Kıbrıs’ta lastik mi patladı? Bölgenizi seçin — İskele’den kaç dakikada yanınıza çıktığımızı görün, hemen arayın.
         </p>
-        <div class="cta-row reveal" style="--d:.24s">
-          <a class="btn btn-primary" href="tel:+905551234567">Hemen Ara</a>
-          <a class="btn btn-ghost" href="https://wa.me/905551234567" target="_blank" rel="noopener">WhatsApp</a>
-        </div>
       </div>
 
-      <div class="hero-ticker" aria-hidden="true">
-        <div class="ticker-track">
-          <span>Lastik Değişimi</span><span>·</span>
-          <span>Yol Yardım</span><span>·</span>
-          <span>Balans</span><span>·</span>
-          <span>Mobil Servis</span><span>·</span>
-          <span>7/24 Expres</span><span>·</span>
-          <span>Lastik Değişimi</span><span>·</span>
-          <span>Yol Yardım</span><span>·</span>
-          <span>Balans</span><span>·</span>
-          <span>Mobil Servis</span><span>·</span>
-          <span>7/24 Expres</span><span>·</span>
+      <div class="eta-panel reveal" id="ulasim" style="--d:.18s">
+        <label class="eta-label" for="region">Neredesiniz?</label>
+        <div class="eta-controls">
+          <select id="region" name="region">
+            <option value="" selected disabled>Bölge seçin</option>
+          </select>
+          <button type="button" class="btn btn-primary" id="calc-btn">Süreyi Göster</button>
         </div>
+
+        <div class="eta-result" id="eta-result" hidden>
+          <div class="eta-time">
+            <span class="eta-kicker">İskele’den tahmini varış</span>
+            <strong id="eta-minutes">—</strong>
+            <span class="eta-unit">dakika</span>
+          </div>
+          <p class="eta-msg" id="eta-msg"></p>
+          <div class="eta-meta">
+            <span id="eta-distance">—</span>
+            <span id="eta-clock">—</span>
+          </div>
+          <div class="cta-row">
+            <a class="btn btn-primary" id="call-btn" href="tel:+905551234567">Şimdi Ara — Yola Çıkalım</a>
+            <a class="btn btn-ghost" id="maps-btn" href="#" target="_blank" rel="noopener">Google Maps’te Aç</a>
+          </div>
+        </div>
+
+        <p class="eta-hint" id="eta-hint">İskele üssümüzden Google rota süresine yakın tahmini hesaplarız.</p>
       </div>
     </section>
 
     <section class="section services" id="hizmetler">
       <div class="section-head">
-        <h2>Hizmetlerimiz</h2>
-        <p>Sahada, dükkânda ve yolda — expres lastik çözümleri.</p>
+        <h2>Hizmetler</h2>
+        <p>İskele ve çevresinde yerinde lastik çözümü.</p>
       </div>
-
       <ul class="service-list">
-        <li class="service-item">
-          <span class="service-num">01</span>
-          <div>
-            <h3>Acil Lastik Değişimi</h3>
-            <p>Patlak, delik veya hava kaybında yerinde hızlı müdahale.</p>
-          </div>
-        </li>
-        <li class="service-item">
-          <span class="service-num">02</span>
-          <div>
-            <h3>7/24 Yol Yardım</h3>
-            <p>Gece gündüz, tatil fark etmeksizin expres mobil ekipler.</p>
-          </div>
-        </li>
-        <li class="service-item">
-          <span class="service-num">03</span>
-          <div>
-            <h3>Balans & Rot Ayarı</h3>
-            <p>Titreşimi keser, lastik ömrünü uzatır, sürüşü dengeler.</p>
-          </div>
-        </li>
-        <li class="service-item">
-          <span class="service-num">04</span>
-          <div>
-            <h3>Mevsimlik Lastik</h3>
-            <p>Yaz / kış lastik montajı, depolama ve ölçü danışmanlığı.</p>
-          </div>
-        </li>
+        <li class="service-item"><span class="service-num">01</span><div><h3>Acil Lastik Değişimi</h3><p>Patlak ve delikte yerinde hızlı müdahale.</p></div></li>
+        <li class="service-item"><span class="service-num">02</span><div><h3>7/24 Yol Yardım</h3><p>Gece gündüz Kıbrıs yollarında expres ekip.</p></div></li>
+        <li class="service-item"><span class="service-num">03</span><div><h3>Balans &amp; Rot</h3><p>Titreşimi keser, lastik ömrünü uzatır.</p></div></li>
+        <li class="service-item"><span class="service-num">04</span><div><h3>Mevsimlik Montaj</h3><p>Yaz / kış lastik, ölçü ve depolama desteği.</p></div></li>
       </ul>
     </section>
 
-    <section class="section why" id="neden">
-      <div class="why-panel">
-        <div class="section-head">
-          <h2>Neden Doğan Lastik?</h2>
-          <p>Hız, güven ve yerinde çözüm — tek odak noktamız.</p>
-        </div>
-        <div class="why-grid">
-          <article>
-            <h3>Anında Müdahale</h3>
-            <p>Çağrınızdan dakikalar sonra ekibimiz yola çıkar.</p>
-          </article>
-          <article>
-            <h3>Mobil Ekipman</h3>
-            <p>Kompresör, kriko ve montaj setiyle yerinde servis.</p>
-          </article>
-          <article>
-            <h3>Şeffaf Fiyat</h3>
-            <p>Önce bilgi, sonra işlem — sürpriz yok.</p>
-          </article>
-        </div>
+    <section class="section map-section" id="harita">
+      <div class="section-head">
+        <h2>Üssümüz: İskele</h2>
+        <p>Doğan Lastik Servisi — İskele, Kuzey Kıbrıs.</p>
+      </div>
+      <div class="map-frame">
+        <iframe
+          title="Doğan Lastik Servisi İskele haritası"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=İskele,+Kuzey+Kıbrıs&z=12&output=embed"
+          allowfullscreen>
+        </iframe>
       </div>
     </section>
 
     <section class="section contact" id="iletisim">
-      <div class="contact-inner">
-        <p class="brand-mini">Doğan Lastik Servisi</p>
-        <h2>Yolda kaldınız mı?<br />Hemen yazın veya arayın.</h2>
-        <p class="contact-lede">7/24 expres lastik servisi — bir telefon kadar yakınız.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="tel:+905551234567">0555 123 45 67</a>
-          <a class="btn btn-ghost" href="https://wa.me/905551234567" target="_blank" rel="noopener">WhatsApp’tan Yaz</a>
-        </div>
-        <p class="hours">Her gün · 00:00 – 24:00 · Mobil servis</p>
+      <p class="brand-mini">Doğan Lastik Servisi</p>
+      <h2>Bu saatte arayın,<br />hemen yola çıkalım.</h2>
+      <p class="contact-lede">İskele merkez · 7/24 expres mobil servis</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="tel:+905551234567">0555 123 45 67</a>
+        <a class="btn btn-ghost" href="https://wa.me/905551234567" target="_blank" rel="noopener">WhatsApp</a>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>© <span id="year"></span> Doğan Lastik Servisi</p>
+    <p>© <span id="year"></span> Doğan Lastik Servisi · İskele</p>
     <p>7/24 Expres Anında Hizmet</p>
   </footer>
 
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="tire3d.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
