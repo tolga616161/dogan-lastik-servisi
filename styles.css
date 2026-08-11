@@ -463,27 +463,29 @@ html[dir="rtl"] .contact {
   z-index: 45;
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.85rem 1rem;
-  border-radius: 12px;
-  background: #1f8f4e;
-  color: #fff;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.7rem 1.05rem;
+  border-radius: 10px;
+  background: #25d366;
+  color: #0b1a10;
   font-weight: 700;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-  animation: wa-pulse 2.8s ease-in-out infinite;
+  font-size: 0.95rem;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
 }
 
-.wa-float span {
-  font-size: 0.92rem;
+.wa-float:hover {
+  filter: brightness(1.05);
 }
 
-@keyframes wa-pulse {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-3px);
+.header-wa {
+  font-size: 0.78rem;
+  padding: 0.55rem 0.7rem;
+}
+
+@media (max-width: 520px) {
+  .header-wa {
+    display: none;
   }
 }
 
