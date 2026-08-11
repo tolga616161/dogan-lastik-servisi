@@ -50,8 +50,6 @@ const gpsBtn = document.getElementById("gps-btn");
 const pinBtn = document.getElementById("pin-btn");
 const langSwitch = document.getElementById("lang-switch");
 const form = document.getElementById("talep");
-const fName = document.getElementById("f-name");
-const fSurname = document.getElementById("f-surname");
 const fPhone = document.getElementById("f-phone");
 const fSize = document.getElementById("f-size");
 const fLoc = document.getElementById("f-loc");
@@ -220,35 +218,23 @@ function ensureMap() {
 
 function buildWhatsAppMessage() {
   const dest = currentDest();
-  const name = (fName?.value || "").trim();
-  const surname = (fSurname?.value || "").trim();
   const phone = (fPhone?.value || "").trim();
-  const size = fSize?.value || "";
+  const size = (fSize?.value || "").trim();
   const desc = (fDesc?.value || "").trim();
-  const locLine = dest
-    ? `${dest.name}\n${mapsPinUrl(dest)}\n(${dest.lat.toFixed(5)}, ${dest.lon.toFixed(5)})`
-    : fLoc?.value || "-";
+  const locName = dest?.name || "-";
+  const locUrl = dest ? mapsPinUrl(dest) : "";
   const etaLine = lastEta
-    ? `${lastEta.minutes} dk · ≈ ${lastEta.km.toFixed(1)} km · ~${arrivalClock(lastEta.minutes)}`
+    ? `${lastEta.minutes} dk · ~${arrivalClock(lastEta.minutes)}`
     : "-";
 
   return [
-    "DOĞAN LASTİK SERVİSİ",
-    "ACİL LASTİK / YOL YARDIM TALEBİ",
-    "------------------------------",
-    `Ad Soyad: ${name} ${surname}`,
+    "DOĞAN LASTİK — ACİL TALEP",
     `Cep: ${phone}`,
-    `Lastik Ebadı: ${size}`,
-    "",
-    "Konum:",
-    locLine,
-    "",
-    `Tahmini varış: ${etaLine}`,
-    "",
-    "Sorun / Açıklama:",
-    desc,
-    "------------------------------",
-    "Site formu → WhatsApp 0533 + 0548",
+    `Lastik: ${size}`,
+    `Konum: ${locName}`,
+    locUrl,
+    `Varış: ${etaLine}`,
+    `Sorun: ${desc}`,
   ].join("\n");
 }
 
@@ -273,18 +259,14 @@ function openWhatsAppOrder() {
   }
   syncLocationField(dest);
 
-  const nameOk = fName.value.trim();
-  const surnameOk = fSurname.value.trim();
   const phoneOk = fPhone.value.trim();
   const sizeOk = fSize.value.trim();
   const descOk = fDesc.value.trim();
   const locOk = fLoc.value.trim();
 
-  if (!nameOk || !surnameOk || !phoneOk || !sizeOk || !descOk || !locOk) {
+  if (!phoneOk || !sizeOk || !descOk || !locOk) {
     formStatus.textContent = t("form_required");
-    if (!nameOk) fName.focus();
-    else if (!surnameOk) fSurname.focus();
-    else if (!phoneOk) fPhone.focus();
+    if (!phoneOk) fPhone.focus();
     else if (!sizeOk) fSize.focus();
     else if (!descOk) fDesc.focus();
     form?.scrollIntoView({ behavior: "smooth", block: "center" });
