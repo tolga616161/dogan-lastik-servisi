@@ -412,8 +412,14 @@ html[dir="rtl"] .contact {
 
 .eta-result {
   margin-top: 1rem;
-  padding-top: 1rem;
+  padding: 1rem 0.85rem 0.25rem;
   border-top: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 176, 32, 0.06);
+}
+
+.eta-result[hidden] {
+  display: none !important;
 }
 
 .eta-time {

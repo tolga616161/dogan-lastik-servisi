@@ -116,12 +116,17 @@ function fallbackMinutes(dest) {
   return Math.max(10, Math.round((km / 55) * 60));
 }
 
+function localEta(dest) {
+  const km = haversineKm(BASE, dest) * 1.35;
+  return { minutes: fallbackMinutes(dest), km, source: "fallback" };
+}
+
 async function routeEta(dest) {
   const url = `https://router.project-osrm.org/route/v1/driving/${BASE.lon},${BASE.lat};${dest.lon},${dest.lat}?overview=false&alternatives=false`;
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 4500);
+  const timer = setTimeout(() => ctrl.abort(), 3500);
   try {
-    const res = await fetch(url, { signal: ctrl.signal });
+    const res = await fetch(url, { signal: ctrl.signal, mode: "cors" });
     if (!res.ok) throw new Error("osrm");
     const data = await res.json();
     const route = data.routes && data.routes[0];
@@ -132,8 +137,7 @@ async function routeEta(dest) {
       source: "osrm",
     };
   } catch {
-    const km = haversineKm(BASE, dest) * 1.35;
-    return { minutes: fallbackMinutes(dest), km, source: "fallback" };
+    return localEta(dest);
   } finally {
     clearTimeout(timer);
   }
@@ -149,40 +153,74 @@ function syncLocationField(dest) {
 }
 
 function renderEta(dest, eta) {
+  if (!dest || !eta || !result) return;
   const mins = eta.minutes;
   const time = arrivalClock(mins);
   lastEta = eta;
-  etaMinutes.textContent = String(mins);
-  etaMsg.textContent = t("eta_msg", { name: dest.name, time });
-  etaDistance.textContent = t("distance", { km: eta.km.toFixed(1) });
-  etaClock.textContent = t("arrival", { time });
-  mapsBtn.href = mapsDirectionsUrl(dest);
-  mapsBtn.title = `${BASE.name} → ${dest.name}`;
+  if (etaMinutes) etaMinutes.textContent = String(mins);
+  if (etaMsg) etaMsg.textContent = t("eta_msg", { name: dest.name, time });
+  if (etaDistance) etaDistance.textContent = t("distance", { km: eta.km.toFixed(1) });
+  if (etaClock) etaClock.textContent = t("arrival", { time });
+  if (mapsBtn) {
+    mapsBtn.href = mapsDirectionsUrl(dest);
+    mapsBtn.title = `${BASE.name} → ${dest.name}`;
+  }
   result.hidden = false;
-  hint.textContent = eta.source === "osrm" ? t("hint_osrm") : t("hint_fallback");
+  result.removeAttribute("hidden");
+  result.style.display = "";
+  if (hint) hint.textContent = eta.source === "osrm" ? t("hint_osrm") : t("hint_fallback");
   syncLocationField(dest);
   if (formStatus) formStatus.textContent = t("form_note");
+  try {
+    result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  } catch (_) {
+    /* ignore */
+  }
 }
 
 function currentDest() {
   if (customDest) return customDest;
-  const id = regionSelect.value;
+  const id = regionSelect?.value;
+  if (!id) return null;
   return REGIONS.find((r) => r.id === id) || null;
 }
+
+let calcToken = 0;
 
 async function calculate() {
   const dest = currentDest();
   if (!dest) {
     if (locStatus) locStatus.textContent = t("need_loc");
-    regionSelect.focus();
+    if (result) {
+      result.hidden = true;
+    }
+    regionSelect?.focus();
     return;
   }
-  calcBtn.disabled = true;
-  calcBtn.textContent = t("calculating");
-  const eta = await routeEta(dest);
-  renderEta(dest, eta);
-  calcBtn.disabled = false;
-  calcBtn.textContent = t("calc");
+
+  const token = ++calcToken;
+  if (calcBtn) {
+    calcBtn.disabled = true;
+    calcBtn.textContent = t("calculating");
+  }
+
+  try {
+    // Önce anında yerel süre göster — buton “çalışmıyor” gibi donmasın
+    const quick = localEta(dest);
+    if (token === calcToken) renderEta(dest, quick);
+
+    const eta = await routeEta(dest);
+    if (token === calcToken) renderEta(dest, eta);
+  } catch (err) {
+    console.warn("eta", err);
+    if (token === calcToken) renderEta(dest, localEta(dest));
+    if (locStatus) locStatus.textContent = t("hint_fallback");
+  } finally {
+    if (calcBtn && token === calcToken) {
+      calcBtn.disabled = false;
+      calcBtn.textContent = t("calc");
+    }
+  }
 }
 
 function setCustomDest(lat, lon, nameKey) {
@@ -299,21 +337,21 @@ form?.addEventListener("submit", (e) => {
 
 gpsBtn?.addEventListener("click", () => {
   if (!navigator.geolocation) {
-    locStatus.textContent = t("gps_fail");
+    if (locStatus) locStatus.textContent = t("gps_fail");
     ensureMap();
     return;
   }
-  locStatus.textContent = t("calculating");
+  if (locStatus) locStatus.textContent = t("calculating");
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       ensureMap();
       const { latitude, longitude } = pos.coords;
-      pickMap.setView([latitude, longitude], 13);
+      if (pickMap) pickMap.setView([latitude, longitude], 13);
       setCustomDest(latitude, longitude, "my_location");
-      locStatus.textContent = t("gps_ok");
+      if (locStatus) locStatus.textContent = t("gps_ok");
     },
     () => {
-      locStatus.textContent = t("gps_fail");
+      if (locStatus) locStatus.textContent = t("gps_fail");
       ensureMap();
     },
     { enableHighAccuracy: true, timeout: 10000 }
@@ -322,13 +360,17 @@ gpsBtn?.addEventListener("click", () => {
 
 pinBtn?.addEventListener("click", () => {
   ensureMap();
-  mapWrap.hidden = false;
-  locStatus.textContent = t("map_hint");
+  if (mapWrap) mapWrap.hidden = false;
+  if (locStatus) locStatus.textContent = t("map_hint");
   setTimeout(() => pickMap?.invalidateSize(), 100);
 });
 
-calcBtn.addEventListener("click", calculate);
-regionSelect.addEventListener("change", () => {
+calcBtn?.addEventListener("click", (e) => {
+  e.preventDefault();
+  calculate();
+});
+
+regionSelect?.addEventListener("change", () => {
   if (!regionSelect.value) return;
   customDest = null;
   const dest = REGIONS.find((r) => r.id === regionSelect.value);
