@@ -200,6 +200,15 @@ body.menu-open {
   color: var(--accent-2);
 }
 
+.side-nav .ig-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  vertical-align: -0.2rem;
+  margin-right: 0.35rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
 .side-menu-cta {
   margin-top: auto;
   display: grid;
