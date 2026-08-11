@@ -269,6 +269,104 @@ function setCustomDest(lat, lon, nameKey) {
   calculate();
 }
 
+function geoOnce(options) {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(Object.assign(new Error("unsupported"), { code: 0 }));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(resolve, reject, options);
+  });
+}
+
+/** Anlık konum: önce hızlı/cache, sonra yüksek doğruluk */
+async function requestLiveLocation() {
+  if (!window.isSecureContext) {
+    throw Object.assign(new Error("insecure"), { code: -1 });
+  }
+  if (!navigator.geolocation) {
+    throw Object.assign(new Error("unsupported"), { code: 0 });
+  }
+
+  // 1) Hızlı: son bilinen / düşük doğruluk
+  try {
+    return await geoOnce({
+      enableHighAccuracy: false,
+      maximumAge: 120000,
+      timeout: 8000,
+    });
+  } catch (_) {
+    /* devam */
+  }
+
+  // 2) Yüksek doğruluk
+  try {
+    return await geoOnce({
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 20000,
+    });
+  } catch (err) {
+    // 3) Son deneme: daha uzun, düşük doğruluk
+    return geoOnce({
+      enableHighAccuracy: false,
+      maximumAge: 300000,
+      timeout: 15000,
+    }).catch(() => {
+      throw err;
+    });
+  }
+}
+
+function applyLiveLocation(pos, { openMap = true, zoom = 15 } = {}) {
+  const { latitude, longitude } = pos.coords;
+  if (openMap) {
+    ensureMap();
+    if (mapWrap) mapWrap.hidden = false;
+    if (pickMap) {
+      pickMap.setView([latitude, longitude], zoom);
+      setTimeout(() => pickMap.invalidateSize(), 100);
+    }
+  }
+  setCustomDest(latitude, longitude, "my_location");
+  if (locStatus) {
+    locStatus.textContent = `${t("gps_ok")} · ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+  }
+  return { latitude, longitude };
+}
+
+function gpsErrorMessage(err) {
+  const code = err && typeof err.code === "number" ? err.code : null;
+  if (code === 1) return t("gps_denied");
+  if (code === 2) return t("gps_unavailable");
+  if (code === 3) return t("gps_timeout");
+  if (code === -1) return t("gps_insecure");
+  return t("gps_fail");
+}
+
+async function grabLiveLocation({ openMap = true } = {}) {
+  if (gpsBtn) gpsBtn.disabled = true;
+  if (pinBtn) pinBtn.disabled = true;
+  if (locStatus) locStatus.textContent = t("gps_getting");
+  try {
+    const pos = await requestLiveLocation();
+    applyLiveLocation(pos, { openMap });
+    return true;
+  } catch (err) {
+    console.warn("gps", err);
+    if (locStatus) locStatus.textContent = gpsErrorMessage(err);
+    if (openMap) {
+      ensureMap();
+      if (mapWrap) mapWrap.hidden = false;
+      setTimeout(() => pickMap?.invalidateSize(), 100);
+    }
+    return false;
+  } finally {
+    if (gpsBtn) gpsBtn.disabled = false;
+    if (pinBtn) pinBtn.disabled = false;
+  }
+}
+
 function ensureMap() {
   if (pickMap || typeof L === "undefined") return;
   mapWrap.hidden = false;
@@ -366,33 +464,17 @@ form?.addEventListener("submit", (e) => {
 });
 
 gpsBtn?.addEventListener("click", () => {
-  if (!navigator.geolocation) {
-    if (locStatus) locStatus.textContent = t("gps_fail");
-    ensureMap();
-    return;
-  }
-  if (locStatus) locStatus.textContent = t("calculating");
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      ensureMap();
-      const { latitude, longitude } = pos.coords;
-      if (pickMap) pickMap.setView([latitude, longitude], 13);
-      setCustomDest(latitude, longitude, "my_location");
-      if (locStatus) locStatus.textContent = t("gps_ok");
-    },
-    () => {
-      if (locStatus) locStatus.textContent = t("gps_fail");
-      ensureMap();
-    },
-    { enableHighAccuracy: true, timeout: 10000 }
-  );
+  grabLiveLocation({ openMap: true });
 });
 
-pinBtn?.addEventListener("click", () => {
-  ensureMap();
-  if (mapWrap) mapWrap.hidden = false;
-  if (locStatus) locStatus.textContent = t("map_hint");
-  setTimeout(() => pickMap?.invalidateSize(), 100);
+pinBtn?.addEventListener("click", async () => {
+  // Harita açılınca önce anlık konum alınsın — pin GPS noktasına gelsin
+  const ok = await grabLiveLocation({ openMap: true });
+  if (!ok && locStatus) {
+    locStatus.textContent = `${gpsErrorMessage({ code: 2 })} ${t("map_hint")}`;
+  } else if (ok && locStatus) {
+    locStatus.textContent = `${t("gps_ok")} — ${t("map_hint_adjust")}`;
+  }
 });
 
 calcBtn?.addEventListener("click", (e) => {
@@ -456,25 +538,14 @@ if (fLoc) fLoc.placeholder = t("form_loc_ph");
 if (fDesc) fDesc.placeholder = t("form_desc_ph");
 if (currentDest()) syncLocationField(currentDest());
 
-// try silent geolocation to prefill
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const { latitude, longitude } = pos.coords;
-      if (!customDest && !regionSelect.value) {
-        customDest = {
-          id: "custom",
-          name: t("my_location"),
-          lat: latitude,
-          lon: longitude,
-        };
-        syncLocationField(customDest);
-        if (locStatus) locStatus.textContent = t("gps_ok");
-      }
-    },
-    () => {},
-    { maximumAge: 60000, timeout: 5000 }
-  );
+// Sayfa açılışında sessiz anlık konum (izin varsa)
+if (navigator.geolocation && window.isSecureContext) {
+  requestLiveLocation()
+    .then((pos) => {
+      if (customDest || regionSelect?.value) return;
+      applyLiveLocation(pos, { openMap: false });
+    })
+    .catch(() => {});
 }
 
 const items = document.querySelectorAll(".service-item, .why-card");
