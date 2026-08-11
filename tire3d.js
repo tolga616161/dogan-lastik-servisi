@@ -17,16 +17,15 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   renderer.toneMappingExposure = 1.05;
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x06080f, 0.034);
+  scene.fog = new THREE.FogExp2(0x06080f, 0.032);
 
-  const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 80);
-  camera.position.set(0, 1.5, 8.6);
+  const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 80);
+  camera.position.set(0, 1.8, 8.8);
 
-  scene.add(new THREE.AmbientLight(0xc0c8dc, 0.75));
-  scene.add(new THREE.HemisphereLight(0xd8e4ff, 0x1a1208, 0.95));
-
-  const key = new THREE.DirectionalLight(0xffe2b0, 1.6);
-  key.position.set(3, 6, 4);
+  scene.add(new THREE.AmbientLight(0xc0c8dc, 0.8));
+  scene.add(new THREE.HemisphereLight(0xd8e4ff, 0x1a1208, 0.9));
+  const key = new THREE.DirectionalLight(0xffe2b0, 1.55);
+  key.position.set(3, 7, 4);
   scene.add(key);
 
   const loader = new THREE.TextureLoader();
@@ -73,7 +72,7 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     if (roadTex) {
       roadTex.wrapS = THREE.RepeatWrapping;
       roadTex.wrapT = THREE.RepeatWrapping;
-      roadTex.repeat.set(2.2, 1.4);
+      roadTex.repeat.set(2.2, 1.6);
     }
 
     const roadMat = new THREE.MeshStandardMaterial({
@@ -82,44 +81,37 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       roughness: 0.42,
       metalness: 0.4,
     });
-    const road = new THREE.Mesh(new THREE.PlaneGeometry(26, 10), roadMat);
+    const road = new THREE.Mesh(new THREE.PlaneGeometry(22, 14), roadMat);
     road.rotation.x = -Math.PI / 2;
-    road.position.set(0, -1.05, -1.2);
+    road.position.set(0, -1.1, -1.5);
     scene.add(road);
-
-    const dashMat = new THREE.MeshBasicMaterial({
-      color: 0xffd36a,
-      transparent: true,
-      opacity: 0.4,
-    });
-    for (let i = -4; i <= 4; i += 1) {
-      const dash = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.08), dashMat);
-      dash.rotation.x = -Math.PI / 2;
-      dash.position.set(i * 2.6, -1.04, -0.3);
-      scene.add(dash);
-    }
 
     const textures = (await Promise.all(BRANDS.map((f) => loadTex(f)))).filter(Boolean);
     const tires = [];
-    const COUNT = 12;
+    const COUNT = 10;
+    const GROUND = -0.15;
 
-    function spawn(mesh, i, first = false) {
-      const fromLeft = i % 2 === 0;
-      const speed = 1.2 + (i % 5) * 0.25;
-      const scale = 1.35 + (i % 3) * 0.2;
+    function drop(mesh, i, staggered = false) {
+      const side = i % 2 === 0 ? -1 : 1;
+      const scale = 1.45 + (i % 3) * 0.22;
       mesh.scale.setScalar(scale);
       mesh.position.set(
-        first ? (fromLeft ? -10 - i * 1.2 : 10 + i * 1.2) : fromLeft ? -12 - Math.random() * 2 : 12 + Math.random() * 2,
-        -0.05 + Math.random() * 0.35,
-        -2.6 + Math.random() * 3.2
+        side * (1.2 + Math.random() * 3.4) + (Math.random() - 0.5) * 0.6,
+        staggered ? 5.5 + i * 1.15 + Math.random() : 6.2 + Math.random() * 2.5,
+        -3.2 + Math.random() * 3.8
       );
-      mesh.rotation.set(0, fromLeft ? 0.35 : -0.35, Math.random() * 0.2 - 0.1);
+      mesh.rotation.set(
+        (Math.random() - 0.5) * 0.4,
+        (Math.random() - 0.5) * 0.8,
+        Math.random() * Math.PI
+      );
       mesh.userData = {
-        fromLeft,
-        speed: fromLeft ? speed : -speed,
-        spin: (fromLeft ? -1 : 1) * (1.6 + Math.random()),
-        bob: Math.random() * Math.PI * 2,
-        baseY: mesh.position.y,
+        vy: -0.2 - Math.random() * 0.8,
+        vx: side * (0.35 + Math.random() * 0.55),
+        spin: (Math.random() > 0.5 ? 1 : -1) * (1.4 + Math.random() * 1.6),
+        bounce: 0,
+        grounded: false,
+        roll: side * (0.9 + Math.random() * 0.7),
       };
     }
 
@@ -128,13 +120,13 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const mat = new THREE.MeshBasicMaterial({
         map: tex,
         transparent: true,
-        alphaTest: 0.15,
+        alphaTest: 0.2,
         depthWrite: false,
         side: THREE.DoubleSide,
       });
-      // şeffaf PNG lastik — yazı/plaka yok, beyaz kutu yok
-      const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2.1, 2.1), mat);
-      spawn(mesh, i, true);
+      // şeffaf PNG lastik — arka plan yok, yukarıdan düşer
+      const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 2.2), mat);
+      drop(mesh, i, true);
       scene.add(mesh);
       tires.push(mesh);
     }
@@ -147,23 +139,42 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const dt = Math.min((now - last) / 1000, 0.033);
       last = now;
 
-      if (roadMat.map) roadMat.map.offset.x = (t * 0.16) % 1;
+      if (roadMat.map) roadMat.map.offset.y = (t * 0.28) % 1;
 
       tires.forEach((tire, i) => {
         const u = tire.userData;
-        tire.position.x += u.speed * dt;
-        tire.rotation.z += u.spin * dt * 0.55;
-        tire.position.y = u.baseY + Math.sin(t * 1.5 + u.bob) * 0.06;
-        // hafif 3D dönüş
-        tire.rotation.y = (u.fromLeft ? 0.25 : -0.25) + Math.sin(t * 0.5 + u.bob) * 0.12;
 
-        if (u.fromLeft && tire.position.x > 12.5) spawn(tire, i);
-        else if (!u.fromLeft && tire.position.x < -12.5) spawn(tire, i);
+        if (!u.grounded) {
+          u.vy -= 9.2 * dt;
+          tire.position.y += u.vy * dt;
+          tire.position.x += u.vx * dt;
+          tire.rotation.z += u.spin * dt;
+          tire.rotation.y += 0.35 * dt;
+
+          if (tire.position.y <= GROUND) {
+            tire.position.y = GROUND;
+            if (Math.abs(u.vy) > 2.4 && u.bounce < 2) {
+              u.vy *= -0.32;
+              u.bounce += 1;
+            } else {
+              u.vy = 0;
+              u.grounded = true;
+              tire.rotation.x = -0.12;
+            }
+          }
+        } else {
+          // yolda sağa/sola kayarak uzaklaş, sonra yukarıdan yeniden düş
+          tire.position.x += u.roll * dt * 0.85;
+          tire.rotation.z -= u.roll * dt * 1.1;
+          if (Math.abs(tire.position.x) > 9.5 || tire.position.z > 4) {
+            drop(tire, i, false);
+          }
+        }
       });
 
-      camera.position.x = mouse.x * 0.5;
-      camera.position.y = 1.5 + mouse.y * -0.18;
-      camera.lookAt(0, 0.2, -0.5);
+      camera.position.x = mouse.x * 0.45;
+      camera.position.y = 1.8 + mouse.y * -0.2;
+      camera.lookAt(0, 0.35, -0.8);
 
       renderer.render(scene, camera);
       requestAnimationFrame(frame);
