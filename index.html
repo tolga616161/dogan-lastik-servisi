@@ -27,7 +27,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=seo1" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="styles.css?v=loc1" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -124,14 +125,23 @@
       </span>
     </a>
     <nav class="nav" aria-label="Ana menü">
-      <a href="#ulasim">Ulaşım</a>
-      <a href="#hizmetler">Hizmetler</a>
-      <a href="#bolgeler">Bölgeler</a>
-      <a href="#blog">Blog</a>
-      <a href="#harita">Harita</a>
+      <a href="#ulasim" data-i18n="nav_ulasim">Ulaşım</a>
+      <a href="#hizmetler" data-i18n="nav_hizmetler">Hizmetler</a>
+      <a href="#bolgeler" data-i18n="nav_bolgeler">Bölgeler</a>
+      <a href="#blog" data-i18n="nav_blog">Blog</a>
+      <a href="#harita" data-i18n="nav_harita">Harita</a>
     </nav>
     <div class="header-actions">
-      <a class="header-cta" href="tel:+905338719810">Ara</a>
+      <label class="lang-wrap" for="lang-switch">
+        <select id="lang-switch" aria-label="Language">
+          <option value="tr">TR</option>
+          <option value="en">EN</option>
+          <option value="ru">RU</option>
+          <option value="de">DE</option>
+          <option value="ar">AR</option>
+        </select>
+      </label>
+      <a class="header-cta" href="tel:+905338719810" data-i18n="ara">Ara</a>
       <a class="header-wa" href="https://wa.me/905338719810" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>
     </div>
   </header>
@@ -139,27 +149,40 @@
   <main>
     <section class="hero" id="ust">
       <div class="hero-copy">
-        <p class="eyebrow reveal" style="--d:0s">İskele lastikçi · Kıbrıs 7/24 yol yardım</p>
-        <h1 class="reveal" style="--d:.06s">Doğan Lastik Servisi<br />7/24 Expres</h1>
-        <p class="lede reveal" style="--d:.12s">
-          Kıbrıs’ta lastik mi patladı? İskele merkezimizden bölgenize tahmini varış süresini görün, hemen arayın.
+        <p class="eyebrow reveal" style="--d:0s" data-i18n="eyebrow">İskele lastikçi · Kıbrıs 7/24 yol yardım</p>
+        <h1 class="reveal" style="--d:.06s">Doğan Lastik Servisi<br /><span data-i18n="h1_line2">7/24 Expres</span></h1>
+        <p class="lede reveal" style="--d:.12s" data-i18n="lede">
+          Kıbrıs’ta lastik mi patladı? Konumunuzu seçin veya haritadan işaretleyin — kaç dakikada yanınızda olduğumuzu görün.
         </p>
       </div>
 
       <div class="eta-panel reveal" id="ulasim" style="--d:.18s">
-        <label class="eta-label" for="region">Neredesiniz?</label>
+        <label class="eta-label" for="region" data-i18n="where">Neredesiniz?</label>
         <div class="eta-controls">
           <select id="region" name="region">
-            <option value="" selected disabled>Bölge seçin</option>
+            <option value="" selected disabled data-i18n-placeholder="region_placeholder">Bölge seçin</option>
           </select>
-          <button type="button" class="btn btn-primary" id="calc-btn">Süreyi Göster</button>
+          <button type="button" class="btn btn-primary" id="calc-btn" data-i18n="calc">Süreyi Göster</button>
+        </div>
+
+        <div class="loc-box">
+          <p class="loc-help" data-i18n="loc_help">Yerinizi bilmiyorsanız buradan konumunuzu ekleyin</p>
+          <div class="loc-actions">
+            <button type="button" class="btn btn-ghost" id="gps-btn" data-i18n="use_gps">Konumumu kullan</button>
+            <button type="button" class="btn btn-ghost" id="pin-btn" data-i18n="pin_map">Haritadan işaretle</button>
+          </div>
+          <p class="loc-status" id="loc-status"></p>
+          <div id="pick-map-wrap" class="pick-map-wrap" hidden>
+            <p class="map-hint" data-i18n="map_hint">Haritaya dokunarak olduğunuz yeri işaretleyin.</p>
+            <div id="pick-map" class="pick-map" role="application" aria-label="Location picker map"></div>
+          </div>
         </div>
 
         <div class="eta-result" id="eta-result" hidden>
           <div class="eta-time">
-            <span class="eta-kicker">İskele üssünden tahmini varış</span>
+            <span class="eta-kicker" data-i18n="eta_kicker">İskele üssünden tahmini varış</span>
             <strong id="eta-minutes">—</strong>
-            <span class="eta-unit">dakika</span>
+            <span class="eta-unit" data-i18n="unit">dakika</span>
           </div>
           <p class="eta-msg" id="eta-msg"></p>
           <div class="eta-meta">
@@ -169,32 +192,32 @@
           <div class="cta-row">
             <a class="btn btn-primary" id="call-btn" href="tel:+905338719810">0533 871 98 10</a>
             <a class="btn btn-primary" href="tel:+905488409810">0548 840 98 10</a>
-            <a class="btn btn-wa" href="https://wa.me/905338719810?text=Merhaba%2C%20Do%C4%9Fan%20Lastik%20Servisi%20-%20acil%20yard%C4%B1m%20istiyorum." target="_blank" rel="noopener">WhatsApp</a>
-            <a class="btn btn-ghost" id="maps-btn" href="https://share.google/n99oqM8SvduZ4cH71" target="_blank" rel="noopener">Google Maps’te Aç</a>
+            <a class="btn btn-wa" href="https://wa.me/905338719810" target="_blank" rel="noopener">WhatsApp</a>
+            <a class="btn btn-ghost" id="maps-btn" href="https://share.google/n99oqM8SvduZ4cH71" target="_blank" rel="noopener" data-i18n="maps">Google Maps’te Aç</a>
           </div>
         </div>
 
-        <p class="eta-hint" id="eta-hint">Süreler Doğan Lastik Servisi İskele konumundan hesaplanır.</p>
+        <p class="eta-hint" id="eta-hint" data-i18n="hint_default">Süreler Doğan Lastik Servisi İskele konumundan hesaplanır.</p>
       </div>
     </section>
 
     <section class="section services" id="hizmetler">
       <div class="section-head">
-        <h2>İskele &amp; Kıbrıs Lastik Hizmetleri</h2>
-        <p>7/24 lastik değişimi, yol yardım, balans ve mevsimlik montaj.</p>
+        <h2 data-i18n="services_h2">İskele &amp; Kıbrıs Lastik Hizmetleri</h2>
+        <p data-i18n="services_p">7/24 lastik değişimi, yol yardım, balans ve mevsimlik montaj.</p>
       </div>
       <ul class="service-list">
-        <li class="service-item"><span class="service-num">01</span><div><h3>Acil Lastik Değişimi</h3><p>Patlak ve delikte yerinde hızlı müdahale — İskele ve çevre.</p></div></li>
-        <li class="service-item"><span class="service-num">02</span><div><h3>7/24 Yol Yardım Kıbrıs</h3><p>Gece gündüz Kuzey Kıbrıs yollarında expres mobil ekip.</p></div></li>
-        <li class="service-item"><span class="service-num">03</span><div><h3>Balans &amp; Rot</h3><p>Titreşimi keser, lastik ömrünü uzatır.</p></div></li>
-        <li class="service-item"><span class="service-num">04</span><div><h3>Mevsimlik Montaj</h3><p>Yaz / kış lastik, ölçü ve depolama desteği.</p></div></li>
+        <li class="service-item"><span class="service-num">01</span><div><h3 data-i18n="s1_h">Acil Lastik Değişimi</h3><p data-i18n="s1_p">Patlak ve delikte yerinde hızlı müdahale — İskele ve çevre.</p></div></li>
+        <li class="service-item"><span class="service-num">02</span><div><h3 data-i18n="s2_h">7/24 Yol Yardım Kıbrıs</h3><p data-i18n="s2_p">Gece gündüz Kuzey Kıbrıs yollarında expres mobil ekip.</p></div></li>
+        <li class="service-item"><span class="service-num">03</span><div><h3 data-i18n="s3_h">Balans &amp; Rot</h3><p data-i18n="s3_p">Titreşimi keser, lastik ömrünü uzatır.</p></div></li>
+        <li class="service-item"><span class="service-num">04</span><div><h3 data-i18n="s4_h">Mevsimlik Montaj</h3><p data-i18n="s4_p">Yaz / kış lastik, ölçü ve depolama desteği.</p></div></li>
       </ul>
     </section>
 
     <section class="section" id="bolgeler">
       <div class="section-head">
-        <h2>Hizmet Bölgelerimiz</h2>
-        <p>Kıbrıs’ta arayanların en çok sorduğu bölgeler — İskele üssünden ekspres çıkış.</p>
+        <h2 data-i18n="regions_h2">Hizmet Bölgelerimiz</h2>
+        <p data-i18n="regions_p">Kıbrıs’ta arayanların en çok sorduğu bölgeler — İskele üssünden ekspres çıkış.</p>
       </div>
       <ul class="seo-tags" aria-label="Hizmet bölgeleri">
         <li>İskele lastikçi</li>
@@ -211,8 +234,8 @@
 
     <section class="section" id="blog">
       <div class="section-head">
-        <h2>Kıbrıs Lastik Rehberi</h2>
-        <p>Aramalarda öne çıkmanız için güncel lastik ve yol yardım yazıları.</p>
+        <h2 data-i18n="blog_h2">Kıbrıs Lastik Rehberi</h2>
+        <p data-i18n="blog_p">Aramalarda öne çıkmanız için güncel lastik ve yol yardım yazıları.</p>
       </div>
       <div class="blog-grid">
         <a class="blog-card" href="/blog/iskele-7-24-lastikci.html">
@@ -236,34 +259,34 @@
           <p>KKTC yollarında güvenlik ve doğru zamanlama.</p>
         </a>
       </div>
-      <p class="blog-more"><a href="/blog/">Tüm blog yazıları →</a></p>
+      <p class="blog-more"><a href="/blog/" data-i18n="blog_more">Tüm blog yazıları →</a></p>
     </section>
 
     <section class="section" id="sss">
       <div class="section-head">
-        <h2>Sık Sorulanlar</h2>
-        <p>Kıbrıs lastikçi aramalarında en çok sorulan sorular.</p>
+        <h2 data-i18n="faq_h2">Sık Sorulanlar</h2>
+        <p data-i18n="faq_p">Kıbrıs lastikçi aramalarında en çok sorulan sorular.</p>
       </div>
       <div class="faq-list">
         <details class="faq-item" open>
-          <summary>İskele’de 7/24 açık lastikçi misiniz?</summary>
-          <p>Evet. Doğan Lastik Servisi İskele’de gece gündüz hizmet verir.</p>
+          <summary data-i18n="faq1_q">İskele’de 7/24 açık lastikçi misiniz?</summary>
+          <p data-i18n="faq1_a">Evet. Doğan Lastik Servisi İskele’de gece gündüz hizmet verir.</p>
         </details>
         <details class="faq-item">
-          <summary>Hangi bölgelere geliyorsunuz?</summary>
-          <p>İskele, Gazimağusa, Karpaz, Lefkoşa, Girne ve çevre bölgeler.</p>
+          <summary data-i18n="faq2_q">Hangi bölgelere geliyorsunuz?</summary>
+          <p data-i18n="faq2_a">İskele, Gazimağusa, Karpaz, Lefkoşa, Girne ve çevre bölgeler.</p>
         </details>
         <details class="faq-item">
-          <summary>Nasıl hızlı ulaşırım?</summary>
-          <p>0533 871 98 10 veya 0548 840 98 10’u arayın, WhatsApp’tan konum atın.</p>
+          <summary data-i18n="faq3_q">Nasıl hızlı ulaşırım?</summary>
+          <p data-i18n="faq3_a">0533 871 98 10 veya 0548 840 98 10’u arayın, WhatsApp’tan konum atın.</p>
         </details>
       </div>
     </section>
 
     <section class="section map-section" id="harita">
       <div class="section-head">
-        <h2>Google Harita: Doğan Lastik Servisi İskele</h2>
-        <p>Doğan Lastik servisi İskele 7/24 lastikçi — resmi konumumuz.</p>
+        <h2 data-i18n="map_h2">Google Harita: Doğan Lastik Servisi İskele</h2>
+        <p data-i18n="map_p">Doğan Lastik servisi İskele 7/24 lastikçi — resmi konumumuz.</p>
       </div>
       <div class="map-frame">
         <iframe
@@ -275,21 +298,21 @@
         </iframe>
       </div>
       <p class="map-link">
-        <a href="https://share.google/n99oqM8SvduZ4cH71" target="_blank" rel="noopener">Google Maps’te işletmemizi aç →</a>
+        <a href="https://share.google/n99oqM8SvduZ4cH71" target="_blank" rel="noopener" data-i18n="map_link">Google Maps’te işletmemizi aç →</a>
       </p>
     </section>
 
     <section class="section contact" id="iletisim">
       <p class="brand-mini">Doğan Lastik Servisi</p>
-      <h2>Bu saatte arayın,<br />hemen yola çıkalım.</h2>
-      <p class="contact-lede">İskele · Kıbrıs 7/24 lastikçi · Yol yardım</p>
+      <h2 data-i18n="contact_h2">Bu saatte arayın, hemen yola çıkalım.</h2>
+      <p class="contact-lede" data-i18n="contact_lede">İskele · Kıbrıs 7/24 lastikçi · Yol yardım</p>
       <div class="phone-grid">
         <a class="phone-card" href="tel:+905338719810">
-          <span>Hat 1</span>
+          <span data-i18n="hat1">Hat 1</span>
           <strong>0533 871 98 10</strong>
         </a>
         <a class="phone-card" href="tel:+905488409810">
-          <span>Hat 2</span>
+          <span data-i18n="hat2">Hat 2</span>
           <strong>0548 840 98 10</strong>
         </a>
       </div>
@@ -321,7 +344,9 @@
       }
     }
   </script>
-  <script type="module" src="tire3d.js?v=seo1"></script>
-  <script src="script.js?v=seo1"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="i18n.js?v=loc1"></script>
+  <script type="module" src="tire3d.js?v=loc1"></script>
+  <script src="script.js?v=loc1"></script>
 </body>
 </html>
