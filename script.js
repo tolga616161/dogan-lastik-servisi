@@ -1,7 +1,8 @@
 const BASE = {
-  name: "İskele",
+  name: "Doğan Lastik Servisi İskele",
   lat: 35.2867,
   lon: 33.8917,
+  mapsUrl: "https://share.google/n99oqM8SvduZ4cH71",
 };
 
 /** Kuzey Kıbrıs bölgeler — İskele üssünden */
@@ -98,6 +99,7 @@ function renderEta(region, eta) {
   etaDistance.textContent = `Mesafe ≈ ${eta.km.toFixed(1)} km`;
   etaClock.textContent = `Tahmini varış ≈ ${arrivalClock(mins)}`;
   mapsBtn.href = mapsDirectionsUrl(region);
+  mapsBtn.title = `${BASE.name} → ${region.name}`;
   result.hidden = false;
   hint.textContent =
     eta.source === "osrm"

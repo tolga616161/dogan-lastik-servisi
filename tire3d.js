@@ -269,9 +269,11 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   window.addEventListener("resize", resize);
 
   const clock = new THREE.Clock();
-  function frame() {
+  let last = performance.now();
+  function frame(now) {
     const t = clock.getElapsedTime();
-    const dt = Math.min(clock.getDelta(), 0.05);
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
 
     tires.forEach((item) => {
       item.mesh.rotation.x = t * item.spin;
@@ -310,5 +312,5 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     renderer.render(scene, camera);
     requestAnimationFrame(frame);
   }
-  frame();
+  requestAnimationFrame(frame);
 }
