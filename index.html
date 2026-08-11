@@ -207,49 +207,48 @@
           </div>
         </div>
 
-        <form class="order-form" id="talep" novalidate>
-          <p class="eta-label" data-i18n="form_title">WhatsApp ile çağır</p>
-          <p class="form-note" data-i18n="form_note">Bilgileri doldurun — konum otomatik eklenir, mesaj 0548 hattına gider.</p>
+        <form class="order-form" id="talep">
+          <p class="eta-label" data-i18n="form_title">WhatsApp ile lastikçi çağır</p>
+          <p class="form-note" data-i18n="form_note">Konum seç, lastik ebadını ve sorun açıklamasını yaz. Gönder deyince aynı mesaj 0533 + 0548 WhatsApp’a gider.</p>
           <div class="form-grid">
             <label>
-              <span data-i18n="form_name">Ad</span>
+              <span data-i18n="form_name">Ad *</span>
               <input id="f-name" name="name" type="text" autocomplete="given-name" required />
             </label>
             <label>
-              <span data-i18n="form_surname">Soyad</span>
+              <span data-i18n="form_surname">Soyad *</span>
               <input id="f-surname" name="surname" type="text" autocomplete="family-name" required />
             </label>
             <label class="full">
-              <span data-i18n="form_phone">Cep telefonu</span>
+              <span data-i18n="form_phone">Cep telefonu *</span>
               <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="05xx xxx xx xx" required />
             </label>
             <label class="full">
-              <span data-i18n="form_size">Lastik ebadı</span>
-              <select id="f-size" name="size" required>
-                <option value="" selected disabled data-i18n-placeholder="form_size_ph">Ebat seçin</option>
-                <option>175/65 R14</option>
-                <option>185/65 R15</option>
-                <option>195/55 R16</option>
-                <option>195/65 R15</option>
-                <option>205/55 R16</option>
-                <option>215/55 R17</option>
-                <option>225/45 R17</option>
-                <option>225/50 R17</option>
-                <option>235/45 R18</option>
-                <option>245/40 R18</option>
-                <option value="other">Diğer / Bilmiyorum</option>
-              </select>
+              <span data-i18n="form_size">Lastik ebadı * (yazın)</span>
+              <input id="f-size" name="size" type="text" list="size-list" placeholder="Örn: 205/55 R16" required />
+              <datalist id="size-list">
+                <option value="175/65 R14"></option>
+                <option value="185/65 R15"></option>
+                <option value="195/55 R16"></option>
+                <option value="195/65 R15"></option>
+                <option value="205/55 R16"></option>
+                <option value="215/55 R17"></option>
+                <option value="225/45 R17"></option>
+                <option value="225/50 R17"></option>
+                <option value="235/45 R18"></option>
+                <option value="245/40 R18"></option>
+              </datalist>
             </label>
             <label class="full">
-              <span data-i18n="form_loc">Konum (otomatik)</span>
-              <input id="f-loc" name="location" type="text" readonly />
+              <span data-i18n="form_loc">Konum * (otomatik / haritadan)</span>
+              <input id="f-loc" name="location" type="text" readonly required />
             </label>
             <label class="full">
-              <span data-i18n="form_desc">Açıklama</span>
-              <textarea id="f-desc" name="desc" rows="3" data-i18n-placeholder="form_desc_ph" placeholder="Örn: sağ ön patlak, Long Beach yolundayım"></textarea>
+              <span data-i18n="form_desc">Sorun açıklaması *</span>
+              <textarea id="f-desc" name="desc" rows="3" required data-i18n-placeholder="form_desc_ph" placeholder="Örn: sağ ön patlak, Long Beach yolundayım"></textarea>
             </label>
           </div>
-          <button type="submit" class="btn btn-wa btn-wa-lg" id="wa-send" data-i18n="form_send">WhatsApp’tan Gönder</button>
+          <button type="submit" class="btn btn-wa btn-wa-lg" id="wa-send" data-i18n="form_send">WhatsApp’a Gönder (0533 + 0548)</button>
           <p class="form-status" id="form-status"></p>
         </form>
 
@@ -453,8 +452,8 @@
     }
   </script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="i18n.js?v=road1"></script>
-  <script type="module" src="tire3d.js?v=road1"></script>
-  <script src="script.js?v=road1"></script>
+  <script src="i18n.js?v=wa3"></script>
+  <script type="module" src="tire3d.js?v=wa2"></script>
+  <script src="script.js?v=wa3"></script>
 </body>
 </html>

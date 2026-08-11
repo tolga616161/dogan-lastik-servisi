@@ -5,7 +5,9 @@ const BASE = {
   mapsUrl: "https://share.google/n99oqM8SvduZ4cH71",
 };
 
+const WA_LINE_1 = "905338719810";
 const WA_LINE_2 = "905488409810";
+const WA_NUMBERS = [WA_LINE_1, WA_LINE_2];
 
 const REGIONS = [
   { id: "iskele", name: "İskele (Merkez)", lat: 35.2867, lon: 33.8917, fallbackMin: 12 },
@@ -157,6 +159,7 @@ function renderEta(dest, eta) {
   result.hidden = false;
   hint.textContent = eta.source === "osrm" ? t("hint_osrm") : t("hint_fallback");
   syncLocationField(dest);
+  if (formStatus) formStatus.textContent = t("form_note");
 }
 
 function currentDest() {
@@ -230,23 +233,35 @@ function buildWhatsAppMessage() {
     : "-";
 
   return [
-    "🛞 *DOĞAN LASTİK SERVİSİ*",
-    "🚨 *Acil Lastik / Yol Yardım Talebi*",
+    "DOĞAN LASTİK SERVİSİ",
+    "ACİL LASTİK / YOL YARDIM TALEBİ",
+    "------------------------------",
+    `Ad Soyad: ${name} ${surname}`,
+    `Cep: ${phone}`,
+    `Lastik Ebadı: ${size}`,
     "",
-    `👤 *Ad Soyad:* ${name} ${surname}`,
-    `📱 *Cep:* ${phone}`,
-    `📏 *Lastik Ebadı:* ${size || "-"}`,
-    "",
-    "📍 *Konum:*",
+    "Konum:",
     locLine,
     "",
-    `⏱️ *Tahmini varış:* ${etaLine}`,
+    `Tahmini varış: ${etaLine}`,
     "",
-    "📝 *Açıklama:*",
-    desc || "-",
-    "",
-    "_Site formu üzerinden gönderildi_",
+    "Sorun / Açıklama:",
+    desc,
+    "------------------------------",
+    "Site formu → WhatsApp 0533 + 0548",
   ].join("\n");
+}
+
+function openWaChat(phone, text) {
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+  const a = document.createElement("a");
+  a.href = url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  return url;
 }
 
 function openWhatsAppOrder() {
@@ -277,9 +292,22 @@ function openWhatsAppOrder() {
   }
 
   const msg = buildWhatsAppMessage();
-  const url = `https://wa.me/${WA_LINE_2}?text=${encodeURIComponent(msg)}`;
   formStatus.textContent = t("form_opening");
-  window.location.href = url;
+
+  // Aynı mesajı iki hatta aç: 0533 + 0548 (ebat, konum, sorun açıklaması dahil)
+  openWaChat(WA_NUMBERS[0], msg);
+  setTimeout(() => {
+    const url2 = openWaChat(WA_NUMBERS[1], msg);
+    // Mobilde ikinci sekme engellenirse en az 0548 açılsın
+    if (!document.hidden) {
+      try {
+        window.location.href = url2;
+      } catch (_) {
+        /* ignore */
+      }
+    }
+  }, 350);
+
   return true;
 }
 
