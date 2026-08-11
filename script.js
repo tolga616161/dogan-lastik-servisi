@@ -468,12 +468,12 @@ gpsBtn?.addEventListener("click", () => {
 });
 
 pinBtn?.addEventListener("click", async () => {
-  // Harita açılınca önce anlık konum alınsın — pin GPS noktasına gelsin
+  // Harita açılınca önce anlık konum alınsın
   const ok = await grabLiveLocation({ openMap: true });
-  if (!ok && locStatus) {
-    locStatus.textContent = `${gpsErrorMessage({ code: 2 })} ${t("map_hint")}`;
-  } else if (ok && locStatus) {
+  if (ok && locStatus) {
     locStatus.textContent = `${t("gps_ok")} — ${t("map_hint_adjust")}`;
+  } else if (locStatus) {
+    locStatus.textContent = `${locStatus.textContent} ${t("map_hint")}`;
   }
 });
 
