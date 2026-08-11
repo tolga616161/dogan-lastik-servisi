@@ -294,19 +294,12 @@ function openWhatsAppOrder() {
   const msg = buildWhatsAppMessage();
   formStatus.textContent = t("form_opening");
 
-  // Aynı mesajı iki hatta aç: 0533 + 0548 (ebat, konum, sorun açıklaması dahil)
+  // Aynı mesaj (ebat + konum + sorun) iki WhatsApp’a: 0533 sonra 0548
   openWaChat(WA_NUMBERS[0], msg);
+  const url2 = `https://wa.me/${WA_NUMBERS[1]}?text=${encodeURIComponent(msg)}`;
   setTimeout(() => {
-    const url2 = openWaChat(WA_NUMBERS[1], msg);
-    // Mobilde ikinci sekme engellenirse en az 0548 açılsın
-    if (!document.hidden) {
-      try {
-        window.location.href = url2;
-      } catch (_) {
-        /* ignore */
-      }
-    }
-  }, 350);
+    window.location.href = url2;
+  }, 400);
 
   return true;
 }
