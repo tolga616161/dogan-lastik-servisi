@@ -1,4 +1,13 @@
 User-agent: *
 Allow: /
 
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Host: https://www.doganlastikservisi.com
+
 Sitemap: https://www.doganlastikservisi.com/sitemap.xml
+Sitemap: https://doganlastikservisi.com/sitemap.xml
