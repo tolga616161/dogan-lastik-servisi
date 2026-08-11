@@ -71,9 +71,9 @@ select {
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(900px 520px at 78% 28%, rgba(255, 176, 32, 0.18), transparent 60%),
-    radial-gradient(700px 480px at 12% 80%, rgba(50, 90, 160, 0.16), transparent 55%),
-    linear-gradient(180deg, rgba(7, 8, 12, 0.55) 0%, rgba(7, 8, 12, 0.35) 40%, rgba(7, 8, 12, 0.88) 100%);
+    radial-gradient(900px 520px at 78% 22%, rgba(255, 176, 32, 0.22), transparent 58%),
+    radial-gradient(780px 520px at 18% 70%, rgba(90, 140, 220, 0.2), transparent 55%),
+    linear-gradient(180deg, rgba(5, 8, 16, 0.45) 0%, rgba(5, 8, 16, 0.18) 38%, rgba(5, 8, 16, 0.78) 100%);
 }
 
 .site-header,
