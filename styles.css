@@ -319,7 +319,8 @@ html[dir="rtl"] .contact {
 }
 
 .header-cta,
-.header-wa {
+.header-wa,
+.header-ig {
   padding: 0.55rem 0.85rem;
   border-radius: 6px;
   font-size: 0.85rem;
@@ -333,9 +334,33 @@ html[dir="rtl"] .contact {
   color: #111;
 }
 
+.header-ig {
+  background: linear-gradient(135deg, #f58529, #dd2a7b 55%, #8134af);
+  color: #fff;
+}
+
 .header-wa {
   background: #1f8f4e;
   color: #fff;
+}
+
+.btn-ig {
+  background: linear-gradient(135deg, #f58529, #dd2a7b 55%, #8134af);
+  color: #fff;
+}
+
+.btn-ig:hover {
+  filter: brightness(1.08);
+}
+
+.ig-handle {
+  margin: 0.85rem 0 0;
+  font-size: 0.95rem;
+}
+
+.ig-handle a {
+  color: var(--accent-2);
+  font-weight: 600;
 }
 
 .hero {
