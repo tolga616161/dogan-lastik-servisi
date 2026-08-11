@@ -539,45 +539,18 @@ html[dir="rtl"] .contact {
   box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.12);
 }
 
-.loc-field {
-  display: grid;
-  gap: 0.28rem;
+.loc-field #f-loc {
+  border-color: rgba(255, 176, 32, 0.28);
+  background: rgba(255, 176, 32, 0.06) !important;
+  color: rgba(238, 242, 247, 0.55) !important;
+  cursor: default;
 }
 
-.loc-field > span {
-  font-size: 0.78rem;
-  color: rgba(214, 232, 220, 0.7);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.loc-chip {
-  min-height: 2.9rem;
-  display: flex;
-  align-items: center;
-  padding: 0.7rem 0.9rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 176, 32, 0.35);
-  background: rgba(255, 176, 32, 0.1);
-  color: var(--accent-2);
-  font-size: 0.95rem;
-  font-weight: 600;
-  line-height: 1.3;
-  word-break: break-word;
-}
-
-.loc-chip[data-empty="1"] {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(238, 242, 247, 0.45);
-  font-weight: 500;
-  font-size: 0.88rem;
-}
-
-.form-grid textarea {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: #080b10 !important;
-  line-height: 1.45;
+.loc-field #f-loc.is-filled {
+  border-color: rgba(255, 176, 32, 0.55);
+  background: rgba(255, 176, 32, 0.12) !important;
+  color: var(--accent-2) !important;
+  font-weight: 650;
 }
 
 .form-grid input:-webkit-autofill,

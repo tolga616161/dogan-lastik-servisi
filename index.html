@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <link rel="stylesheet" href="styles.css?v=nobg1" />
+  <link rel="stylesheet" href="styles.css?v=loc1" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -259,11 +259,10 @@
                 <option value="12.00 R20"></option>
               </datalist>
             </label>
-            <div class="full loc-field">
-              <span data-i18n="form_loc">Konum *</span>
-              <div class="loc-chip" id="f-loc-chip" data-empty="1" data-i18n="form_loc_ph">Önce bölge seç veya haritadan işaretle</div>
-              <input id="f-loc" name="location" type="hidden" required />
-            </div>
+            <label class="full loc-field">
+              <span data-i18n="form_loc">Konum * (otomatik dolar)</span>
+              <input id="f-loc" name="location" type="text" readonly required placeholder="Bölge / GPS / harita seçince otomatik dolar" />
+            </label>
             <label class="full">
               <span data-i18n="form_desc">Sorun açıklaması *</span>
               <textarea id="f-desc" name="desc" rows="3" required data-i18n-placeholder="form_desc_ph" placeholder="Örn: sağ ön patlak / kamyon lastiği, Long Beach yolundayım"></textarea>
@@ -481,6 +480,6 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="i18n.js?v=menu3"></script>
-  <script src="script.js?v=menu3"></script>
+  <script src="script.js?v=loc1"></script>
 </body>
 </html>

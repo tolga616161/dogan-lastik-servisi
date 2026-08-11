@@ -141,13 +141,11 @@ async function routeEta(dest) {
 
 function syncLocationField(dest) {
   if (!fLoc || !dest) return;
-  // Forma kısa, okunur konum — uzun URL/koordinat yok
-  fLoc.value = dest.name;
-  const chip = document.getElementById("f-loc-chip");
-  if (chip) {
-    chip.textContent = dest.name;
-    chip.dataset.empty = "0";
-  }
+  // Konum seçilince alttaki kutuyu anında doldur
+  const label = dest.name || t("custom_pin");
+  fLoc.value = label;
+  fLoc.classList.add("is-filled");
+  fLoc.setAttribute("title", `${label} (${dest.lat.toFixed(5)}, ${dest.lon.toFixed(5)})`);
 }
 
 function renderEta(dest, eta) {
@@ -260,8 +258,9 @@ function openWhatsAppOrder() {
   const dest = currentDest();
   if (!dest) {
     formStatus.textContent = t("need_loc");
-    syncLocChipEmpty();
-    document.getElementById("f-loc-chip")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    fLoc?.classList.remove("is-filled");
+    fLoc?.focus();
+    form?.scrollIntoView({ behavior: "smooth", block: "center" });
     return false;
   }
   syncLocationField(dest);
@@ -332,6 +331,8 @@ calcBtn.addEventListener("click", calculate);
 regionSelect.addEventListener("change", () => {
   if (!regionSelect.value) return;
   customDest = null;
+  const dest = REGIONS.find((r) => r.id === regionSelect.value);
+  if (dest) syncLocationField(dest);
   calculate();
 });
 
@@ -340,7 +341,9 @@ langSwitch?.addEventListener("change", () => {
   fillRegions();
   calcBtn.textContent = t("calc");
   if (fDesc && !fDesc.value) fDesc.placeholder = t("form_desc_ph");
-  syncLocChipEmpty();
+  if (fLoc && !fLoc.value) fLoc.placeholder = t("form_loc_ph");
+  // dil değişince seçili konum varsa kutuyu yenile
+  if (currentDest()) syncLocationField(currentDest());
   if (!result.hidden && currentDest()) calculate();
   else if (hint) hint.textContent = t("hint_default");
 });
@@ -349,17 +352,9 @@ document.addEventListener("dls:lang", () => {
   fillRegions();
   if (calcBtn) calcBtn.textContent = t("calc");
   if (fDesc && !fDesc.value) fDesc.placeholder = t("form_desc_ph");
-  syncLocChipEmpty();
+  if (fLoc && !fLoc.value) fLoc.placeholder = t("form_loc_ph");
+  if (currentDest()) syncLocationField(currentDest());
 });
-
-function syncLocChipEmpty() {
-  const chip = document.getElementById("f-loc-chip");
-  if (!chip) return;
-  if (!fLoc?.value) {
-    chip.textContent = t("form_loc_ph");
-    chip.dataset.empty = "1";
-  }
-}
 
 const menuBtn = document.getElementById("menu-btn");
 const menuClose = document.getElementById("menu-close");
@@ -382,8 +377,9 @@ sideMenu?.querySelectorAll("a").forEach((a) => {
 
 if (I()) I().init();
 if (hint) hint.textContent = t("hint_default");
-syncLocChipEmpty();
+if (fLoc) fLoc.placeholder = t("form_loc_ph");
 if (fDesc) fDesc.placeholder = t("form_desc_ph");
+if (currentDest()) syncLocationField(currentDest());
 
 // try silent geolocation to prefill
 if (navigator.geolocation) {
