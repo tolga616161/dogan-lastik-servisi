@@ -1205,16 +1205,6 @@ html[dir="rtl"] .contact {
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
-
-  .blog-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1100px) {
-  .blog-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }
 
 .seo-block .blog-list-title {
@@ -1338,6 +1328,12 @@ html[dir="rtl"] .contact {
   }
 
   .why-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .blog-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
