@@ -5,6 +5,8 @@ const BASE = {
   mapsUrl: "https://share.google/n99oqM8SvduZ4cH71",
 };
 
+const WA_LINE_2 = "905488409810";
+
 const REGIONS = [
   { id: "iskele", name: "İskele (Merkez)", lat: 35.2867, lon: 33.8917, fallbackMin: 12 },
   { id: "bogaz", name: "Boğaz / Long Beach", lat: 35.326, lon: 33.925, fallbackMin: 18 },
@@ -23,6 +25,7 @@ const REGIONS = [
 let customDest = null;
 let pickMap = null;
 let pickMarker = null;
+let lastEta = null;
 
 const year = document.getElementById("year");
 if (year) year.textContent = String(new Date().getFullYear());
@@ -44,6 +47,14 @@ const mapWrap = document.getElementById("pick-map-wrap");
 const gpsBtn = document.getElementById("gps-btn");
 const pinBtn = document.getElementById("pin-btn");
 const langSwitch = document.getElementById("lang-switch");
+const form = document.getElementById("talep");
+const fName = document.getElementById("f-name");
+const fSurname = document.getElementById("f-surname");
+const fPhone = document.getElementById("f-phone");
+const fSize = document.getElementById("f-size");
+const fLoc = document.getElementById("f-loc");
+const fDesc = document.getElementById("f-desc");
+const formStatus = document.getElementById("form-status");
 
 function fillRegions() {
   if (!regionSelect) return;
@@ -71,6 +82,10 @@ function mapsDirectionsUrl(dest) {
   const origin = `${BASE.lat},${BASE.lon}`;
   const destination = `${dest.lat},${dest.lon}`;
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=driving`;
+}
+
+function mapsPinUrl(dest) {
+  return `https://maps.google.com/?q=${dest.lat},${dest.lon}`;
 }
 
 function arrivalClock(minutes) {
@@ -124,18 +139,15 @@ async function routeEta(dest) {
   }
 }
 
-function waLinks(dest) {
-  const text = `${t("wa_text")} ${dest.lat.toFixed(5)},${dest.lon.toFixed(5)} https://maps.google.com/?q=${dest.lat},${dest.lon}`;
-  const q = encodeURIComponent(text);
-  document.querySelectorAll("a.btn-wa, a.header-wa, a.wa-float").forEach((a) => {
-    const base = a.href.includes("905488409810") ? "905488409810" : "905338719810";
-    a.href = `https://wa.me/${base}?text=${q}`;
-  });
+function syncLocationField(dest) {
+  if (!fLoc || !dest) return;
+  fLoc.value = `${dest.name} | ${dest.lat.toFixed(5)}, ${dest.lon.toFixed(5)} | ${mapsPinUrl(dest)}`;
 }
 
 function renderEta(dest, eta) {
   const mins = eta.minutes;
   const time = arrivalClock(mins);
+  lastEta = eta;
   etaMinutes.textContent = String(mins);
   etaMsg.textContent = t("eta_msg", { name: dest.name, time });
   etaDistance.textContent = t("distance", { km: eta.km.toFixed(1) });
@@ -144,7 +156,7 @@ function renderEta(dest, eta) {
   mapsBtn.title = `${BASE.name} → ${dest.name}`;
   result.hidden = false;
   hint.textContent = eta.source === "osrm" ? t("hint_osrm") : t("hint_fallback");
-  waLinks(dest);
+  syncLocationField(dest);
 }
 
 function currentDest() {
@@ -180,6 +192,7 @@ function setCustomDest(lat, lon, nameKey) {
   if (pickMarker && pickMap) {
     pickMarker.setLatLng([lat, lon]);
   }
+  syncLocationField(customDest);
   calculate();
 }
 
@@ -201,6 +214,63 @@ function ensureMap() {
   });
   setTimeout(() => pickMap.invalidateSize(), 80);
 }
+
+function buildWhatsAppMessage() {
+  const dest = currentDest();
+  const name = (fName?.value || "").trim();
+  const surname = (fSurname?.value || "").trim();
+  const phone = (fPhone?.value || "").trim();
+  const size = fSize?.value || "";
+  const desc = (fDesc?.value || "").trim();
+  const locLine = dest
+    ? `${dest.name}\n${mapsPinUrl(dest)}\n(${dest.lat.toFixed(5)}, ${dest.lon.toFixed(5)})`
+    : fLoc?.value || "-";
+  const etaLine = lastEta
+    ? `${lastEta.minutes} dk · ≈ ${lastEta.km.toFixed(1)} km · ~${arrivalClock(lastEta.minutes)}`
+    : "-";
+
+  return [
+    "🛞 *DOĞAN LASTİK SERVİSİ*",
+    "🚨 *Acil Lastik / Yol Yardım Talebi*",
+    "",
+    `👤 *Ad Soyad:* ${name} ${surname}`,
+    `📱 *Cep:* ${phone}`,
+    `📏 *Lastik Ebadı:* ${size || "-"}`,
+    "",
+    "📍 *Konum:*",
+    locLine,
+    "",
+    `⏱️ *Tahmini varış:* ${etaLine}`,
+    "",
+    "📝 *Açıklama:*",
+    desc || "-",
+    "",
+    "_Site formu üzerinden gönderildi_",
+  ].join("\n");
+}
+
+function openWhatsAppOrder() {
+  const dest = currentDest();
+  if (!dest) {
+    formStatus.textContent = t("need_loc");
+    return false;
+  }
+  if (!fName.value.trim() || !fSurname.value.trim() || !fPhone.value.trim() || !fSize.value) {
+    formStatus.textContent = t("form_required");
+    return false;
+  }
+  syncLocationField(dest);
+  const msg = buildWhatsAppMessage();
+  const url = `https://wa.me/${WA_LINE_2}?text=${encodeURIComponent(msg)}`;
+  formStatus.textContent = t("form_opening");
+  window.open(url, "_blank", "noopener");
+  return true;
+}
+
+form?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  openWhatsAppOrder();
+});
 
 gpsBtn?.addEventListener("click", () => {
   if (!navigator.geolocation) {
@@ -243,6 +313,7 @@ langSwitch?.addEventListener("change", () => {
   I()?.setLang(langSwitch.value);
   fillRegions();
   calcBtn.textContent = t("calc");
+  if (fDesc && !fDesc.value) fDesc.placeholder = t("form_desc_ph");
   if (!result.hidden && currentDest()) calculate();
   else if (hint) hint.textContent = t("hint_default");
 });
@@ -250,10 +321,34 @@ langSwitch?.addEventListener("change", () => {
 document.addEventListener("dls:lang", () => {
   fillRegions();
   if (calcBtn) calcBtn.textContent = t("calc");
+  if (fDesc && !fDesc.value) fDesc.placeholder = t("form_desc_ph");
 });
 
 if (I()) I().init();
 if (hint) hint.textContent = t("hint_default");
+if (fLoc) fLoc.placeholder = t("form_loc_ph");
+if (fDesc) fDesc.placeholder = t("form_desc_ph");
+
+// try silent geolocation to prefill
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+      if (!customDest && !regionSelect.value) {
+        customDest = {
+          id: "custom",
+          name: t("my_location"),
+          lat: latitude,
+          lon: longitude,
+        };
+        syncLocationField(customDest);
+        if (locStatus) locStatus.textContent = t("gps_ok");
+      }
+    },
+    () => {},
+    { maximumAge: 60000, timeout: 5000 }
+  );
+}
 
 const items = document.querySelectorAll(".service-item, .why-card");
 if ("IntersectionObserver" in window) {
