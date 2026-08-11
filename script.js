@@ -1,4 +1,3 @@
-const PHONE = "+905551234567";
 const BASE = {
   name: "İskele",
   lat: 35.2867,

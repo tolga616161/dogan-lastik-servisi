@@ -150,16 +150,31 @@ main,
   color: var(--ink);
 }
 
-.header-cta {
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
   flex-shrink: 0;
-  padding: 0.55rem 0.95rem;
-  border-radius: 3px;
-  background: var(--accent);
-  color: #111;
+}
+
+.header-cta,
+.header-wa {
+  padding: 0.55rem 0.85rem;
+  border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.header-cta {
+  background: var(--accent);
+  color: #111;
+}
+
+.header-wa {
+  background: #1f8f4e;
+  color: #fff;
 }
 
 .hero {
@@ -339,6 +354,89 @@ main,
 
 .btn-ghost:hover {
   border-color: rgba(255, 176, 32, 0.55);
+}
+
+.btn-wa {
+  background: #1f8f4e;
+  color: #fff;
+}
+
+.btn-wa:hover {
+  background: #27a85c;
+}
+
+.phone-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  max-width: 34rem;
+}
+
+.phone-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(12, 14, 20, 0.55);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.phone-card:hover {
+  border-color: rgba(255, 176, 32, 0.55);
+  transform: translateY(-2px);
+}
+
+.phone-card span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.phone-card strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  letter-spacing: 0.03em;
+  color: var(--accent);
+}
+
+.wa-float {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 45;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: #1f8f4e;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  animation: wa-pulse 2.8s ease-in-out infinite;
+}
+
+.wa-float span {
+  font-size: 0.92rem;
+}
+
+@keyframes wa-pulse {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@media (min-width: 760px) {
+  .phone-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .section {
