@@ -337,18 +337,20 @@ html[dir="rtl"] .contact {
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  width: 2.6rem;
-  height: 2.6rem;
+  width: 2.7rem;
+  height: 2.7rem;
   padding: 0 !important;
   border: 2px solid #111 !important;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   background: #ffb020 !important;
   color: #111 !important;
   box-shadow: none !important;
+  flex-shrink: 0;
 }
 
-.header-ig img {
+.header-ig img,
+.header-ig .ig-icon {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -362,9 +364,22 @@ html[dir="rtl"] .contact {
 }
 
 .btn-ig {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
   background: #ffb020 !important;
   color: #111 !important;
   border: 2px solid #111 !important;
+}
+
+.btn-ig .ig-icon,
+.btn-ig img.ig-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+  display: block;
+  object-fit: contain;
 }
 
 .btn-ig:hover {
@@ -752,14 +767,15 @@ html[dir="rtl"] .contact {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 3.25rem;
-  height: 3.25rem;
+  width: 3.35rem;
+  height: 3.35rem;
   padding: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   background: #ffb020 !important;
   overflow: hidden;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4), 0 0 0 2px #111;
   transition: transform 0.2s ease, filter 0.2s ease;
+  flex-shrink: 0;
 }
 
 .ig-float img {
