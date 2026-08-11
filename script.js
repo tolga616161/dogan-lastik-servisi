@@ -1,3 +1,29 @@
+// Yenilemede tarayıcı eski scroll / #markalar yerine üste alsın
+try {
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+} catch (_) {
+  /* ignore */
+}
+window.scrollTo(0, 0);
+window.addEventListener("load", () => {
+  // hash ile gelinse bile ilk açılışta üste al
+  if (!sessionStorage.getItem("dls_nav")) {
+    window.scrollTo(0, 0);
+    if (location.hash) {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+  }
+  sessionStorage.removeItem("dls_nav");
+});
+document.addEventListener(
+  "click",
+  (e) => {
+    const a = e.target.closest?.('a[href^="#"]');
+    if (a) sessionStorage.setItem("dls_nav", "1");
+  },
+  true
+);
+
 const BASE = {
   name: "Doğan Lastik Servisi İskele",
   lat: 35.2867,
@@ -171,12 +197,16 @@ function renderEta(dest, eta) {
   if (hint) hint.textContent = eta.source === "osrm" ? t("hint_osrm") : t("hint_fallback");
   syncLocationField(dest);
   if (formStatus) formStatus.textContent = t("form_note");
-  try {
-    result.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  } catch (_) {
-    /* ignore */
+  if (renderEta.shouldScroll) {
+    try {
+      result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } catch (_) {
+      /* ignore */
+    }
+    renderEta.shouldScroll = false;
   }
 }
+renderEta.shouldScroll = false;
 
 function currentDest() {
   if (customDest) return customDest;
@@ -367,6 +397,7 @@ pinBtn?.addEventListener("click", () => {
 
 calcBtn?.addEventListener("click", (e) => {
   e.preventDefault();
+  renderEta.shouldScroll = true;
   calculate();
 });
 
@@ -375,6 +406,8 @@ regionSelect?.addEventListener("change", () => {
   customDest = null;
   const dest = REGIONS.find((r) => r.id === regionSelect.value);
   if (dest) syncLocationField(dest);
+  // otomatik hesapta sayfayı aşağı kaydırma
+  renderEta.shouldScroll = false;
   calculate();
 });
 
