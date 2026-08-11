@@ -253,17 +253,33 @@ function openWhatsAppOrder() {
   const dest = currentDest();
   if (!dest) {
     formStatus.textContent = t("need_loc");
-    return false;
-  }
-  if (!fName.value.trim() || !fSurname.value.trim() || !fPhone.value.trim() || !fSize.value) {
-    formStatus.textContent = t("form_required");
+    form?.scrollIntoView({ behavior: "smooth", block: "center" });
     return false;
   }
   syncLocationField(dest);
+
+  const nameOk = fName.value.trim();
+  const surnameOk = fSurname.value.trim();
+  const phoneOk = fPhone.value.trim();
+  const sizeOk = fSize.value.trim();
+  const descOk = fDesc.value.trim();
+  const locOk = fLoc.value.trim();
+
+  if (!nameOk || !surnameOk || !phoneOk || !sizeOk || !descOk || !locOk) {
+    formStatus.textContent = t("form_required");
+    if (!nameOk) fName.focus();
+    else if (!surnameOk) fSurname.focus();
+    else if (!phoneOk) fPhone.focus();
+    else if (!sizeOk) fSize.focus();
+    else if (!descOk) fDesc.focus();
+    form?.scrollIntoView({ behavior: "smooth", block: "center" });
+    return false;
+  }
+
   const msg = buildWhatsAppMessage();
   const url = `https://wa.me/${WA_LINE_2}?text=${encodeURIComponent(msg)}`;
   formStatus.textContent = t("form_opening");
-  window.open(url, "_blank", "noopener");
+  window.location.href = url;
   return true;
 }
 
