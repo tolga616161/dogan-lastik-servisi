@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <link rel="stylesheet" href="styles.css?v=loc1" />
+  <link rel="stylesheet" href="styles.css?v=full1" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -74,8 +74,17 @@
       "telephone": "+905338719810",
       "contactType": "customer service",
       "areaServed": "CY",
-      "availableLanguage": ["Turkish", "tr"]
-    }]
+      "availableLanguage": ["Turkish", "English", "Russian", "German", "Arabic", "tr", "en", "ru", "de", "ar"]
+    }],
+    "brand": {
+      "@type": "Brand",
+      "name": "Petlas"
+    },
+    "makesOffer": [
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "7/24 Lastik Değişimi"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Yol Yardım"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Petlas Lastik", "brand": "Petlas"}}
+    ]
   }
   </script>
   <script type="application/ld+json">
@@ -127,9 +136,11 @@
     <nav class="nav" aria-label="Ana menü">
       <a href="#ulasim" data-i18n="nav_ulasim">Ulaşım</a>
       <a href="#hizmetler" data-i18n="nav_hizmetler">Hizmetler</a>
+      <a href="#markalar" data-i18n="nav_markalar">Markalar</a>
       <a href="#bolgeler" data-i18n="nav_bolgeler">Bölgeler</a>
       <a href="#blog" data-i18n="nav_blog">Blog</a>
       <a href="#harita" data-i18n="nav_harita">Harita</a>
+      <a href="#iletisim" data-i18n="nav_iletisim">İletişim</a>
     </nav>
     <div class="header-actions">
       <label class="lang-wrap" for="lang-switch">
@@ -212,6 +223,46 @@
         <li class="service-item"><span class="service-num">03</span><div><h3 data-i18n="s3_h">Balans &amp; Rot</h3><p data-i18n="s3_p">Titreşimi keser, lastik ömrünü uzatır.</p></div></li>
         <li class="service-item"><span class="service-num">04</span><div><h3 data-i18n="s4_h">Mevsimlik Montaj</h3><p data-i18n="s4_p">Yaz / kış lastik, ölçü ve depolama desteği.</p></div></li>
       </ul>
+    </section>
+
+    <section class="section" id="markalar">
+      <div class="section-head">
+        <h2 data-i18n="brands_h2">Lastik Markaları</h2>
+        <p data-i18n="brands_p">Petlas başta olmak üzere stokta ve siparişle çalışan markalar.</p>
+      </div>
+      <ul class="brand-rail" aria-label="Lastik markaları">
+        <li class="brand-featured">PETLAS</li>
+        <li>Lassa</li>
+        <li>Michelin</li>
+        <li>Bridgestone</li>
+        <li>Goodyear</li>
+        <li>Continental</li>
+        <li>Pirelli</li>
+        <li>Hankook</li>
+        <li>Falken</li>
+        <li>Kumho</li>
+      </ul>
+    </section>
+
+    <section class="section" id="neden">
+      <div class="section-head">
+        <h2 data-i18n="why_h2">Neden Doğan Lastik?</h2>
+        <p data-i18n="why_p">İskele merkez · hızlı çıkış · şeffaf fiyat.</p>
+      </div>
+      <div class="why-grid">
+        <article class="why-card">
+          <h3 data-i18n="why1_h">7/24 Expres</h3>
+          <p data-i18n="why1_p">Gece gündüz arayın, ekip yola çıksın.</p>
+        </article>
+        <article class="why-card">
+          <h3 data-i18n="why2_h">Yerinde Müdahale</h3>
+          <p data-i18n="why2_p">Mobil ekipmanla bulunduğunuz noktaya geliyoruz.</p>
+        </article>
+        <article class="why-card">
+          <h3 data-i18n="why3_h">Konumdan Süre</h3>
+          <p data-i18n="why3_p">Haritadan işaretleyin, tahmini varış süresini görün.</p>
+        </article>
+      </div>
     </section>
 
     <section class="section" id="bolgeler">
@@ -306,6 +357,9 @@
       <p class="brand-mini">Doğan Lastik Servisi</p>
       <h2 data-i18n="contact_h2">Bu saatte arayın, hemen yola çıkalım.</h2>
       <p class="contact-lede" data-i18n="contact_lede">İskele · Kıbrıs 7/24 lastikçi · Yol yardım</p>
+      <p class="contact-address">
+        <a href="https://share.google/n99oqM8SvduZ4cH71" target="_blank" rel="noopener" data-i18n="address_line">Doğan Lastik servisi İskele 7/24 lastikçi — Google konum</a>
+      </p>
       <div class="phone-grid">
         <a class="phone-card" href="tel:+905338719810">
           <span data-i18n="hat1">Hat 1</span>
@@ -319,7 +373,9 @@
       <div class="cta-row">
         <a class="btn btn-wa" href="https://wa.me/905338719810?text=Merhaba%2C%20Do%C4%9Fan%20Lastik%20Servisi%20-%20acil%20yard%C4%B1m%20istiyorum." target="_blank" rel="noopener">WhatsApp 0533</a>
         <a class="btn btn-wa" href="https://wa.me/905488409810?text=Merhaba%2C%20Do%C4%9Fan%20Lastik%20Servisi%20-%20acil%20yard%C4%B1m%20istiyorum." target="_blank" rel="noopener">WhatsApp 0548</a>
+        <a class="btn btn-primary" href="tel:+905338719810" data-i18n="ara">Ara</a>
       </div>
+      <p class="hours" data-i18n="hours">Her gün 00:00 – 24:00 · Mobil + dükkan desteği</p>
     </section>
   </main>
 
@@ -328,12 +384,19 @@
     <span>WhatsApp</span>
   </a>
 
-  <footer class="site-footer">
+  <footer class="site-footer footer-rich">
     <div>
-      <p>© <span id="year"></span> Doğan Lastik Servisi · İskele, Kıbrıs</p>
-      <p>7/24 lastikçi · Yol yardım · <a href="/blog/">Blog</a> · <a href="/sitemap.xml">Sitemap</a></p>
+      <p><strong>Doğan Lastik Servisi</strong></p>
+      <p>© <span id="year"></span> İskele, Kıbrıs · 7/24 Expres</p>
+      <p>
+        <a href="tel:+905338719810">0533 871 98 10</a> ·
+        <a href="tel:+905488409810">0548 840 98 10</a>
+      </p>
     </div>
-    <p><a href="https://share.google/n99oqM8SvduZ4cH71" target="_blank" rel="noopener">Google İşletme</a></p>
+    <div>
+      <p><a href="/#ulasim" data-i18n="nav_ulasim">Ulaşım</a> · <a href="/#markalar" data-i18n="nav_markalar">Markalar</a> · <a href="/blog/">Blog</a></p>
+      <p><a href="https://share.google/n99oqM8SvduZ4cH71" target="_blank" rel="noopener">Google İşletme</a> · <a href="/sitemap.xml">Sitemap</a></p>
+    </div>
   </footer>
 
   <script type="importmap">
@@ -345,8 +408,8 @@
     }
   </script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="i18n.js?v=loc1"></script>
-  <script type="module" src="tire3d.js?v=petlas1"></script>
-  <script src="script.js?v=petlas1"></script>
+  <script src="i18n.js?v=full1"></script>
+  <script type="module" src="tire3d.js?v=full1"></script>
+  <script src="script.js?v=full1"></script>
 </body>
 </html>

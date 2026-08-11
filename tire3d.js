@@ -66,22 +66,22 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       ctx.stroke();
     }
 
-    const slots = 6;
+    const slots = 5;
     for (let i = 0; i < slots; i += 1) {
       const x = (i + 0.5) * (c.width / slots);
-      ctx.fillStyle = "#f2f4f7";
-      ctx.font = "bold 110px Arial Black, Arial, sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 128px Arial Black, Impact, sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("PETLAS", x, 210);
+      ctx.fillText("PETLAS", x, 200);
 
       ctx.fillStyle = "#ffb020";
-      ctx.font = "bold 42px Arial, sans-serif";
-      ctx.fillText("RADIAL", x, 300);
+      ctx.font = "bold 48px Arial, sans-serif";
+      ctx.fillText("PETLAS", x, 290);
 
-      ctx.fillStyle = "rgba(230,235,240,0.75)";
-      ctx.font = "36px Arial, sans-serif";
-      ctx.fillText("205/55R16 91V", x, 360);
+      ctx.fillStyle = "rgba(230,235,240,0.8)";
+      ctx.font = "34px Arial, sans-serif";
+      ctx.fillText("205/55R16 91V · TUBELESS", x, 360);
     }
 
     const tex = new THREE.CanvasTexture(c);
@@ -118,7 +118,10 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   const tires = [];
 
   function makeCarTire(scale = 1) {
+    const root = new THREE.Group();
     const g = new THREE.Group();
+    root.add(g);
+    root.userData.spinner = g;
 
     const rubber = new THREE.MeshStandardMaterial({
       map: treadTex,
@@ -215,9 +218,9 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     }
 
     g.scale.setScalar(scale);
-    // stand like a car tire on the ground (axis along Z visually via group rotation)
+    // stand like a car tire
     g.rotation.z = Math.PI / 2;
-    return g;
+    return root;
   }
 
   // hero Petlas tire
@@ -226,20 +229,50 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   main.rotation.y = -0.35;
   main.rotation.x = 0.08;
   scene.add(main);
-  tires.push({ mesh: main, spin: 0.22, axis: "y" });
+  tires.push({ mesh: main, spin: 0.55 });
 
   const left = makeCarTire(0.85);
   left.position.set(-1.85, 0.35, -1.4);
   left.rotation.y = 0.55;
   left.rotation.x = -0.15;
   scene.add(left);
-  tires.push({ mesh: left, spin: -0.16, axis: "y" });
+  tires.push({ mesh: left, spin: -0.4 });
 
   const back = makeCarTire(0.5);
   back.position.set(0.15, 1.15, -3.1);
   back.rotation.y = -0.8;
   scene.add(back);
-  tires.push({ mesh: back, spin: 0.28, axis: "y" });
+  tires.push({ mesh: back, spin: 0.7 });
+
+  // floating Petlas brand plate
+  function makeBrandPlate(text) {
+    const c = document.createElement("canvas");
+    c.width = 1024;
+    c.height = 256;
+    const ctx = c.getContext("2d");
+    ctx.clearRect(0, 0, 1024, 256);
+    ctx.fillStyle = "rgba(8,10,14,0.75)";
+    ctx.fillRect(40, 40, 944, 176);
+    ctx.strokeStyle = "#ffb020";
+    ctx.lineWidth = 6;
+    ctx.strokeRect(40, 40, 944, 176);
+    ctx.fillStyle = "#ffb020";
+    ctx.font = "bold 110px Arial Black, Impact, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, 512, 128);
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    const mat = new THREE.MeshBasicMaterial({
+      map: tex,
+      transparent: true,
+      depthWrite: false,
+    });
+    return new THREE.Mesh(new THREE.PlaneGeometry(3.2, 0.8), mat);
+  }
+  const petlasPlate = makeBrandPlate("PETLAS");
+  petlasPlate.position.set(-0.2, 2.05, -0.6);
+  scene.add(petlasPlate);
 
   // soft rain
   const rainCount = 900;
@@ -289,10 +322,11 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     const dt = Math.min((now - last) / 1000, 0.05);
     last = now;
 
-    // smooth roll around tire axle (local Y after standing rotation)
+    // smooth roll on tire axle
     tires.forEach((item, idx) => {
-      item.mesh.rotateY(item.spin * dt);
-      item.mesh.rotation.x = Math.sin(t * 0.25 + idx) * 0.04;
+      const spinner = item.mesh.userData.spinner;
+      if (spinner) spinner.rotation.x += item.spin * dt;
+      item.mesh.rotation.y += Math.sin(t * 0.2 + idx) * 0.0008;
     });
 
     const pos = rain.geometry.attributes.position.array;
@@ -308,6 +342,8 @@ if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     rain.geometry.attributes.position.needsUpdate = true;
 
     rimLight.intensity = 2.8 + Math.sin(t * 2) * 0.35;
+    petlasPlate.position.y = 2.05 + Math.sin(t * 1.1) * 0.06;
+    petlasPlate.lookAt(camera.position);
 
     camera.position.x = 0.1 + mouse.x * 0.35;
     camera.position.y = 1.1 + mouse.y * -0.18;

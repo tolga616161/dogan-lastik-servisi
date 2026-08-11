@@ -255,7 +255,7 @@ document.addEventListener("dls:lang", () => {
 if (I()) I().init();
 if (hint) hint.textContent = t("hint_default");
 
-const items = document.querySelectorAll(".service-item");
+const items = document.querySelectorAll(".service-item, .why-card");
 if ("IntersectionObserver" in window) {
   const io = new IntersectionObserver(
     (entries) => {

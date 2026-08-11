@@ -478,11 +478,6 @@ html[dir="rtl"] .contact {
   filter: brightness(1.05);
 }
 
-.header-wa {
-  font-size: 0.78rem;
-  padding: 0.55rem 0.7rem;
-}
-
 @media (max-width: 520px) {
   .header-wa {
     display: none;
@@ -606,6 +601,74 @@ html[dir="rtl"] .contact {
 
 .site-footer a {
   color: var(--accent);
+}
+
+.brand-rail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.brand-rail li {
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(12, 14, 20, 0.55);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(238, 242, 247, 0.82);
+}
+
+.brand-rail .brand-featured {
+  color: #111;
+  background: var(--accent);
+  border-color: transparent;
+}
+
+.why-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.why-card {
+  padding: 1.1rem 1.15rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(12, 14, 20, 0.55);
+}
+
+.why-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.why-card p {
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+}
+
+.contact-address {
+  margin: 0.75rem 0 0;
+}
+
+.contact-address a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.hours {
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.footer-rich {
+  gap: 1.25rem 2rem;
 }
 
 .seo-tags {
@@ -786,6 +849,10 @@ html[dir="rtl"] .contact {
 
   .blog-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .why-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
