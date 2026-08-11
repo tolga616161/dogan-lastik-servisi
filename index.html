@@ -119,6 +119,14 @@
     ]
   }
   </script>
+  <script>
+    // Sayfa açılınca / yenilenince her zaman en üstten başla
+    try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+    if (!sessionStorage.getItem("dls_nav")) {
+      if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+      window.scrollTo(0, 0);
+    }
+  </script>
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
