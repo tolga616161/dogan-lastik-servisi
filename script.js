@@ -141,7 +141,13 @@ async function routeEta(dest) {
 
 function syncLocationField(dest) {
   if (!fLoc || !dest) return;
-  fLoc.value = `${dest.name} | ${dest.lat.toFixed(5)}, ${dest.lon.toFixed(5)} | ${mapsPinUrl(dest)}`;
+  // Forma kısa, okunur konum — uzun URL/koordinat yok
+  fLoc.value = dest.name;
+  const chip = document.getElementById("f-loc-chip");
+  if (chip) {
+    chip.textContent = dest.name;
+    chip.dataset.empty = "0";
+  }
 }
 
 function renderEta(dest, eta) {
@@ -254,7 +260,8 @@ function openWhatsAppOrder() {
   const dest = currentDest();
   if (!dest) {
     formStatus.textContent = t("need_loc");
-    form?.scrollIntoView({ behavior: "smooth", block: "center" });
+    syncLocChipEmpty();
+    document.getElementById("f-loc-chip")?.scrollIntoView({ behavior: "smooth", block: "center" });
     return false;
   }
   syncLocationField(dest);
@@ -333,6 +340,7 @@ langSwitch?.addEventListener("change", () => {
   fillRegions();
   calcBtn.textContent = t("calc");
   if (fDesc && !fDesc.value) fDesc.placeholder = t("form_desc_ph");
+  syncLocChipEmpty();
   if (!result.hidden && currentDest()) calculate();
   else if (hint) hint.textContent = t("hint_default");
 });
@@ -341,11 +349,40 @@ document.addEventListener("dls:lang", () => {
   fillRegions();
   if (calcBtn) calcBtn.textContent = t("calc");
   if (fDesc && !fDesc.value) fDesc.placeholder = t("form_desc_ph");
+  syncLocChipEmpty();
+});
+
+function syncLocChipEmpty() {
+  const chip = document.getElementById("f-loc-chip");
+  if (!chip) return;
+  if (!fLoc?.value) {
+    chip.textContent = t("form_loc_ph");
+    chip.dataset.empty = "1";
+  }
+}
+
+const menuBtn = document.getElementById("menu-btn");
+const menuClose = document.getElementById("menu-close");
+const sideMenu = document.getElementById("side-menu");
+const menuBackdrop = document.getElementById("menu-backdrop");
+
+function setMenu(open) {
+  document.body.classList.toggle("menu-open", open);
+  if (sideMenu) sideMenu.setAttribute("aria-hidden", open ? "false" : "true");
+  if (menuBtn) menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  if (menuBackdrop) menuBackdrop.hidden = !open;
+}
+
+menuBtn?.addEventListener("click", () => setMenu(true));
+menuClose?.addEventListener("click", () => setMenu(false));
+menuBackdrop?.addEventListener("click", () => setMenu(false));
+sideMenu?.querySelectorAll("a").forEach((a) => {
+  a.addEventListener("click", () => setMenu(false));
 });
 
 if (I()) I().init();
 if (hint) hint.textContent = t("hint_default");
-if (fLoc) fLoc.placeholder = t("form_loc_ph");
+syncLocChipEmpty();
 if (fDesc) fDesc.placeholder = t("form_desc_ph");
 
 // try silent geolocation to prefill

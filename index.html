@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <link rel="stylesheet" href="styles.css?v=form2" />
+  <link rel="stylesheet" href="styles.css?v=menu3" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -126,20 +126,24 @@
   <div class="scene-veil" aria-hidden="true"></div>
 
   <header class="site-header">
-    <a class="brand-lockup" href="#ust" aria-label="Doğan Lastik Servisi ana sayfa">
-      <img src="assets/logo-dogan.png" alt="Doğan Lastik Servisi logosu" class="brand-mark" width="48" height="48" />
-      <span class="brand-text">
-        <strong>DOĞAN LASTİK SERVİSİ</strong>
-        <small>İskele · Kıbrıs · 7/24</small>
-      </span>
-    </a>
+    <div class="header-left">
+      <button type="button" class="menu-btn" id="menu-btn" aria-label="Menü" aria-expanded="false" aria-controls="side-menu">
+        <span></span><span></span><span></span>
+      </button>
+      <a class="brand-lockup" href="#ust" aria-label="Doğan Lastik Servisi ana sayfa">
+        <img src="assets/logo-dogan.png" alt="Doğan Lastik Servisi logosu" class="brand-mark" width="48" height="48" />
+        <span class="brand-text">
+          <strong>DOĞAN LASTİK SERVİSİ</strong>
+          <small>İskele · Kıbrıs · 7/24</small>
+        </span>
+      </a>
+    </div>
     <nav class="nav" aria-label="Ana menü">
       <a href="#ulasim" data-i18n="nav_ulasim">Ulaşım</a>
       <a href="#hizmetler" data-i18n="nav_hizmetler">Hizmetler</a>
+      <a href="#agir-vasita" data-i18n="nav_truck">Ağır Vasıta</a>
       <a href="#markalar" data-i18n="nav_markalar">Markalar</a>
       <a href="#bolgeler" data-i18n="nav_bolgeler">Bölgeler</a>
-      <a href="#blog" data-i18n="nav_blog">Blog</a>
-      <a href="#harita" data-i18n="nav_harita">Harita</a>
       <a href="#iletisim" data-i18n="nav_iletisim">İletişim</a>
     </nav>
     <div class="header-actions">
@@ -157,13 +161,36 @@
     </div>
   </header>
 
+  <div class="menu-backdrop" id="menu-backdrop" hidden></div>
+  <aside class="side-menu" id="side-menu" aria-hidden="true" aria-label="Menü">
+    <div class="side-menu-head">
+      <strong data-i18n="menu_title">Menü</strong>
+      <button type="button" class="menu-close" id="menu-close" aria-label="Kapat">×</button>
+    </div>
+    <nav class="side-nav">
+      <a href="#ulasim" data-i18n="nav_ulasim">Ulaşım</a>
+      <a href="#talep" data-i18n="nav_talep">WhatsApp Talep</a>
+      <a href="#hizmetler" data-i18n="nav_hizmetler">Hizmetler</a>
+      <a href="#agir-vasita" data-i18n="nav_truck">Ağır Vasıta / Kamyon</a>
+      <a href="#markalar" data-i18n="nav_markalar">Markalar</a>
+      <a href="#bolgeler" data-i18n="nav_bolgeler">Bölgeler</a>
+      <a href="#blog" data-i18n="nav_blog">Blog</a>
+      <a href="#harita" data-i18n="nav_harita">Harita</a>
+      <a href="#iletisim" data-i18n="nav_iletisim">İletişim</a>
+    </nav>
+    <div class="side-menu-cta">
+      <a class="btn btn-primary" href="tel:+905338719810">0533 871 98 10</a>
+      <a class="btn btn-wa" href="#talep">WhatsApp</a>
+    </div>
+  </aside>
+
   <main>
     <section class="hero" id="ust">
       <div class="hero-copy">
-        <p class="eyebrow reveal" style="--d:0s" data-i18n="eyebrow">İskele lastikçi · Kıbrıs 7/24 yol yardım</p>
+        <p class="eyebrow reveal" style="--d:0s" data-i18n="eyebrow">İskele · binek + ağır vasıta · 7/24</p>
         <h1 class="reveal" style="--d:.06s">DOĞAN LASTİK SERVİSİ<br /><span data-i18n="h1_line2">7/24 Expres</span></h1>
         <p class="lede reveal" style="--d:.12s" data-i18n="lede">
-          Kıbrıs’ta lastik mi patladı? Konumunuzu seçin veya haritadan işaretleyin — kaç dakikada yanınızda olduğumuzu görün.
+          Binek, SUV, kamyonet ve ağır vasıta / kamyon lastiği. Konum seç — kaç dakikada yanınızda olduğumuzu gör.
         </p>
       </div>
 
@@ -209,35 +236,38 @@
 
         <form class="order-form" id="talep">
           <p class="eta-label" data-i18n="form_title">WhatsApp ile lastikçi çağır</p>
-          <p class="form-note" data-i18n="form_note">Cep, ebat, konum ve sorunu yaz — gönderince özet WhatsApp’a düşer.</p>
+          <p class="form-note" data-i18n="form_note">Cep, ebat, konum, sorun — gönderince özet WhatsApp’a gider.</p>
           <div class="form-grid">
             <label class="full">
               <span data-i18n="form_phone">Cep telefonu *</span>
               <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="05xx xxx xx xx" required />
             </label>
             <label class="full">
-              <span data-i18n="form_size">Lastik ebadı * (yazın)</span>
-              <input id="f-size" name="size" type="text" list="size-list" placeholder="Örn: 205/55 R16" required />
+              <span data-i18n="form_size">Lastik ebadı * (binek / kamyon)</span>
+              <input id="f-size" name="size" type="text" list="size-list" placeholder="Örn: 205/55 R16 veya 315/80 R22.5" required />
               <datalist id="size-list">
                 <option value="175/65 R14"></option>
                 <option value="185/65 R15"></option>
                 <option value="195/55 R16"></option>
-                <option value="195/65 R15"></option>
                 <option value="205/55 R16"></option>
                 <option value="215/55 R17"></option>
                 <option value="225/45 R17"></option>
-                <option value="225/50 R17"></option>
                 <option value="235/45 R18"></option>
                 <option value="245/40 R18"></option>
+                <option value="265/70 R17"></option>
+                <option value="315/80 R22.5"></option>
+                <option value="385/65 R22.5"></option>
+                <option value="12.00 R20"></option>
               </datalist>
             </label>
-            <label class="full">
-              <span data-i18n="form_loc">Konum * (otomatik / haritadan)</span>
-              <input id="f-loc" name="location" type="text" readonly required />
-            </label>
+            <div class="full loc-field">
+              <span data-i18n="form_loc">Konum *</span>
+              <div class="loc-chip" id="f-loc-chip" data-empty="1" data-i18n="form_loc_ph">Önce bölge seç veya haritadan işaretle</div>
+              <input id="f-loc" name="location" type="hidden" required />
+            </div>
             <label class="full">
               <span data-i18n="form_desc">Sorun açıklaması *</span>
-              <textarea id="f-desc" name="desc" rows="3" required data-i18n-placeholder="form_desc_ph" placeholder="Örn: sağ ön patlak, Long Beach yolundayım"></textarea>
+              <textarea id="f-desc" name="desc" rows="3" required data-i18n-placeholder="form_desc_ph" placeholder="Örn: sağ ön patlak / kamyon lastiği, Long Beach yolundayım"></textarea>
             </label>
           </div>
           <button type="submit" class="btn btn-wa btn-wa-lg" id="wa-send" data-i18n="form_send">WhatsApp’a Gönder (0533 + 0548)</button>
@@ -258,25 +288,40 @@
         <li class="service-item"><span class="service-num">02</span><div><h3 data-i18n="s2_h">7/24 Yol Yardım Kıbrıs</h3><p data-i18n="s2_p">Gece gündüz Kuzey Kıbrıs yollarında expres mobil ekip.</p></div></li>
         <li class="service-item"><span class="service-num">03</span><div><h3 data-i18n="s3_h">Balans &amp; Rot</h3><p data-i18n="s3_p">Titreşimi keser, lastik ömrünü uzatır.</p></div></li>
         <li class="service-item"><span class="service-num">04</span><div><h3 data-i18n="s4_h">Mevsimlik Montaj</h3><p data-i18n="s4_p">Yaz / kış lastik, ölçü ve depolama desteği.</p></div></li>
+        <li class="service-item"><span class="service-num">05</span><div><h3 data-i18n="s5_h">Ağır Vasıta &amp; Kamyon</h3><p data-i18n="s5_p">Kamyon, otobüs, iş makinesi lastiği — yerinde müdahale.</p></div></li>
       </ul>
+    </section>
+
+    <section class="section truck-section" id="agir-vasita">
+      <div class="section-head">
+        <h2 data-i18n="truck_h2">Ağır Vasıta &amp; Kamyon Lastiği</h2>
+        <p data-i18n="truck_p">Kamyon, otobüs, kamyonet ve iş makineleri için lastik değişimi / yol yardım.</p>
+      </div>
+      <ul class="truck-list">
+        <li data-i18n="truck_1">Kamyon &amp; TIR lastiği (22.5” vb.)</li>
+        <li data-i18n="truck_2">Otobüs / midibüs lastiği</li>
+        <li data-i18n="truck_3">Kamyonet &amp; van lastiği</li>
+        <li data-i18n="truck_4">İş makinesi / traktör lastiği desteği</li>
+      </ul>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="tel:+905338719810" data-i18n="ara">Ara</a>
+        <a class="btn btn-wa" href="#talep" data-i18n="nav_talep">WhatsApp Talep</a>
+      </div>
     </section>
 
     <section class="section" id="markalar">
       <div class="section-head">
         <h2 data-i18n="brands_h2">Lastik Markaları</h2>
-        <p data-i18n="brands_p">Petlas başta olmak üzere stokta ve siparişle çalışan markalar.</p>
+        <p data-i18n="brands_p">Petlas başta — binek ve ağır vasıta markaları.</p>
       </div>
-      <ul class="brand-rail" aria-label="Lastik markaları">
-        <li class="brand-featured">PETLAS</li>
-        <li>Lassa</li>
-        <li>Michelin</li>
-        <li>Bridgestone</li>
-        <li>Goodyear</li>
-        <li>Continental</li>
-        <li>Pirelli</li>
-        <li>Hankook</li>
-        <li>Falken</li>
-        <li>Kumho</li>
+      <ul class="brand-logos" aria-label="Lastik markaları">
+        <li><img src="assets/brands/petlas.png" alt="Petlas" width="180" height="52" loading="lazy" /></li>
+        <li><img src="assets/brands/michelin.png" alt="Michelin" width="180" height="52" loading="lazy" /></li>
+        <li><img src="assets/brands/yokohama.png" alt="Yokohama" width="180" height="52" loading="lazy" /></li>
+        <li><img src="assets/brands/continental.png" alt="Continental" width="180" height="52" loading="lazy" /></li>
+        <li><img src="assets/brands/lassa.png" alt="Lassa" width="180" height="52" loading="lazy" /></li>
+        <li><img src="assets/brands/bridgestone.png" alt="Bridgestone" width="180" height="52" loading="lazy" /></li>
+        <li><img src="assets/brands/goodyear.png" alt="Goodyear" width="180" height="52" loading="lazy" /></li>
       </ul>
     </section>
 
@@ -444,8 +489,8 @@
     }
   </script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="i18n.js?v=wa4"></script>
-  <script type="module" src="tire3d.js?v=fall2"></script>
-  <script src="script.js?v=wa4"></script>
+  <script src="i18n.js?v=menu3"></script>
+  <script type="module" src="tire3d.js?v=pngonly3"></script>
+  <script src="script.js?v=menu3"></script>
 </body>
 </html>
