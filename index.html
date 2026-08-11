@@ -129,7 +129,7 @@
     <a class="brand-lockup" href="#ust" aria-label="Doğan Lastik Servisi ana sayfa">
       <img src="assets/logo-dogan.png" alt="Doğan Lastik Servisi logosu" class="brand-mark" width="48" height="48" />
       <span class="brand-text">
-        <strong>Doğan Lastik Servisi</strong>
+        <strong>DOĞAN LASTİK SERVİSİ</strong>
         <small>İskele · Kıbrıs · 7/24</small>
       </span>
     </a>
@@ -153,7 +153,7 @@
         </select>
       </label>
       <a class="header-cta" href="tel:+905338719810" data-i18n="ara">Ara</a>
-      <a class="header-wa" href="https://wa.me/905338719810" target="_blank" rel="noopener" aria-label="WhatsApp">WhatsApp</a>
+      <a class="header-wa" href="#talep" aria-label="WhatsApp">WhatsApp</a>
     </div>
   </header>
 
@@ -203,10 +203,55 @@
           <div class="cta-row">
             <a class="btn btn-primary" id="call-btn" href="tel:+905338719810">0533 871 98 10</a>
             <a class="btn btn-primary" href="tel:+905488409810">0548 840 98 10</a>
-            <a class="btn btn-wa" href="https://wa.me/905338719810" target="_blank" rel="noopener">WhatsApp</a>
             <a class="btn btn-ghost" id="maps-btn" href="https://share.google/n99oqM8SvduZ4cH71" target="_blank" rel="noopener" data-i18n="maps">Google Maps’te Aç</a>
           </div>
         </div>
+
+        <form class="order-form" id="talep" novalidate>
+          <p class="eta-label" data-i18n="form_title">WhatsApp ile çağır</p>
+          <p class="form-note" data-i18n="form_note">Bilgileri doldurun — konum otomatik eklenir, mesaj 0548 hattına gider.</p>
+          <div class="form-grid">
+            <label>
+              <span data-i18n="form_name">Ad</span>
+              <input id="f-name" name="name" type="text" autocomplete="given-name" required />
+            </label>
+            <label>
+              <span data-i18n="form_surname">Soyad</span>
+              <input id="f-surname" name="surname" type="text" autocomplete="family-name" required />
+            </label>
+            <label class="full">
+              <span data-i18n="form_phone">Cep telefonu</span>
+              <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="05xx xxx xx xx" required />
+            </label>
+            <label class="full">
+              <span data-i18n="form_size">Lastik ebadı</span>
+              <select id="f-size" name="size" required>
+                <option value="" selected disabled data-i18n-placeholder="form_size_ph">Ebat seçin</option>
+                <option>175/65 R14</option>
+                <option>185/65 R15</option>
+                <option>195/55 R16</option>
+                <option>195/65 R15</option>
+                <option>205/55 R16</option>
+                <option>215/55 R17</option>
+                <option>225/45 R17</option>
+                <option>225/50 R17</option>
+                <option>235/45 R18</option>
+                <option>245/40 R18</option>
+                <option value="other">Diğer / Bilmiyorum</option>
+              </select>
+            </label>
+            <label class="full">
+              <span data-i18n="form_loc">Konum (otomatik)</span>
+              <input id="f-loc" name="location" type="text" readonly />
+            </label>
+            <label class="full">
+              <span data-i18n="form_desc">Açıklama</span>
+              <textarea id="f-desc" name="desc" rows="3" data-i18n-placeholder="form_desc_ph" placeholder="Örn: sağ ön patlak, Long Beach yolundayım"></textarea>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-wa btn-wa-lg" id="wa-send" data-i18n="form_send">WhatsApp’tan Gönder</button>
+          <p class="form-status" id="form-status"></p>
+        </form>
 
         <p class="eta-hint" id="eta-hint" data-i18n="hint_default">Süreler Doğan Lastik Servisi İskele konumundan hesaplanır.</p>
       </div>
@@ -379,7 +424,7 @@
     </section>
   </main>
 
-  <a class="wa-float" href="https://wa.me/905338719810?text=Merhaba%2C%20Do%C4%9Fan%20Lastik%20Servisi%20-%20acil%20yard%C4%B1m%20istiyorum." target="_blank" rel="noopener" aria-label="WhatsApp">
+  <a class="wa-float" href="#talep" aria-label="WhatsApp">
     <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M16.1 3C9.3 3 3.8 8.5 3.8 15.2c0 2.1.6 4.2 1.6 6L3 29l7.9-2.5c1.7.9 3.6 1.4 5.5 1.4 6.8 0 12.3-5.5 12.3-12.3S22.9 3 16.1 3zm0 22.4c-1.7 0-3.4-.5-4.9-1.3l-.3-.2-4.7 1.5 1.5-4.5-.2-.4c-1-1.6-1.5-3.4-1.5-5.3 0-5.6 4.6-10.2 10.2-10.2s10.2 4.6 10.2 10.2-4.6 10.2-10.3 10.2zm5.6-7.6c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.1c-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.4-2.3-1.4-.8-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.6-.4z"/></svg>
     <span>WhatsApp</span>
   </a>
@@ -408,8 +453,8 @@
     }
   </script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="i18n.js?v=full1"></script>
-  <script type="module" src="tire3d.js?v=full1"></script>
-  <script src="script.js?v=full1"></script>
+  <script src="i18n.js?v=form1"></script>
+  <script type="module" src="tire3d.js?v=form1"></script>
+  <script src="script.js?v=form1"></script>
 </body>
 </html>
